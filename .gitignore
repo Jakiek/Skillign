@@ -13,10 +13,9 @@ coverage/
 .DS_Store
 *.log
 
-# Bahan kerja pribadi
-CLAUDE.md
-LEARNING.md
-skills/
-AGENTS.md
-.impeccable/
-.codex/
+# Dokumentasi kerja internal (salinan lokal tetap dipertahankan)
+/docs/DEPLOYMENT.md
+/docs/deployment.md
+/docs/QA.md
+/docs/ROADMAP.md
+/docs/CONVENTIONS.md

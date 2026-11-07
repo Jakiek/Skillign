@@ -22,13 +22,11 @@
 ## 3. Struktur folder
 
 ```
-jembatan/
+skillign/
 ├── PROJECTBRIEF.md
 ├── docs/
 │   ├── ARCHITECTURE.md
-│   ├── CONVENTIONS.md          # aturan domain, lapisan, dan konvensi kode
 │   ├── DESIGN.md
-│   ├── ROADMAP.md
 │   └── decisions/              # ADR singkat bila ada keputusan baru
 ├── api/
 │   └── index.ts                # membungkus app Express untuk Vercel
