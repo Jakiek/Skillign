@@ -1,0 +1,22 @@
+# Dependensi & build
+node_modules/
+dist/
+coverage/
+.vercel/
+
+# Lingkungan & rahasia
+.env
+.env.*
+!.env.example
+
+# Sistem
+.DS_Store
+*.log
+
+# Bahan kerja pribadi
+CLAUDE.md
+LEARNING.md
+skills/
+AGENTS.md
+.impeccable/
+.codex/

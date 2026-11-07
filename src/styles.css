@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body { @apply m-0 bg-bg font-sans text-ink antialiased; }
+  ::selection { @apply bg-brand-soft text-ink; }
+  :focus-visible { outline: 2px solid #1F6F78; outline-offset: 4px; }
+  a { text-underline-offset: 4px; }
+}
+
+@layer components {
+  .card { @apply min-w-0 rounded-xl border border-line bg-card p-5; overflow-wrap: anywhere; }
+  .button-primary { @apply inline-flex items-center justify-center rounded-lg bg-brand px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#195A62]; }
+  .button-secondary { @apply inline-flex items-center justify-center rounded-lg border border-line bg-card px-4 py-2.5 text-sm font-semibold text-brand hover:bg-brand-soft; }
+}
+
+@layer components {
+  .form-label { @apply block text-sm font-semibold; }
+  .form-input { @apply mt-2 w-full rounded-lg border border-line bg-card p-3 text-sm; }
+}
+
+@layer base {
+  html { color-scheme: light; }
+  h1, h2, h3 { text-wrap: balance; overflow-wrap: anywhere; }
+  button, a, select, input, textarea { -webkit-tap-highlight-color: #E3F0F1; touch-action: manipulation; }
+  input, textarea { caret-color: #1F6F78; }
+  dialog { overscroll-behavior: contain; }
+}
