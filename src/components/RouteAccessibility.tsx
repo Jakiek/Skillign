@@ -12,7 +12,7 @@ export function RouteAccessibility() {
     if (changed) { main.focus(); window.scrollTo({ top: 0, behavior: 'instant' }); }
     const updateTitle = () => {
       const title = main.querySelector('h1')?.textContent;
-      document.title = title ? `${title} · Jembatan` : 'Jembatan · Prototipe konsep';
+      document.title = title ? `${title} · Skillign` : 'Skillign · Prototipe konsep';
     };
     updateTitle();
     const observer = new MutationObserver(updateTitle);

@@ -11,11 +11,11 @@ const Analitik = lazy(() => import('./pages/Analitik').then((m) => ({ default: m
 
 export function App() {
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-screen flex-col lg:pl-60">
       <a href="#konten" className="sr-only focus:not-sr-only focus:absolute focus:bg-card focus:p-4">Lewati ke konten</a>
       <Header />
       <RouteAccessibility />
-      <main id="konten" tabIndex={-1} className="mx-auto w-full max-w-6xl flex-1 px-6 py-8 sm:py-10">
+      <main id="konten" tabIndex={-1} className="mx-auto w-full max-w-7xl flex-1 px-6 py-8 sm:py-10">
         <Routes>
           <Route path="/" element={<Beranda />} />
           <Route path="/analitik" element={<Suspense fallback={<p role="status">Memuat analitik…</p>}><Analitik /></Suspense>} />
@@ -28,7 +28,7 @@ export function App() {
         </Routes>
       </main>
       <footer className="border-t border-line px-6 py-6 text-sm leading-6 text-muted">
-        <p className="mx-auto max-w-6xl">Prototipe portofolio mandiri. Data contoh bersifat sintetis. Tidak berafiliasi dengan perusahaan atau institusi mana pun.</p>
+        <p className="mx-auto max-w-7xl">Prototipe portofolio mandiri. Nama mitra dan topik terpilih merujuk sumber publik DTETI; atribut kecocokan, talenta, dan minat merupakan simulasi. Tidak berafiliasi dengan perusahaan atau institusi mana pun.</p>
       </footer>
     </div>
   );

@@ -1,4 +1,4 @@
-# ROADMAP — Jembatan
+# ROADMAP — Skillign
 
 ## Ringkasan proyek
 
@@ -62,7 +62,7 @@ Status coding:
 - [x] Pengujian integrasi SQL/API lokal, lint, dan build.
 - [ ] Verifikasi koneksi Neon dan deploy Vercel ditunda atas arahan pemilik untuk fokus coding.
 
-Arahan pemilik: selesaikan coding per milestone; catatan belajar dan tanya jawab wawancara disiapkan setelah Jembatan dan Getar selesai. Fase 1 belum dinyatakan selesai untuk cakupan hosting.
+Arahan pemilik: selesaikan coding per milestone; catatan belajar dan tanya jawab wawancara disiapkan setelah Skillign dan Getar selesai. Fase 1 belum dinyatakan selesai untuk cakupan hosting.
 
 
 ### Yang dikerjakan
@@ -229,3 +229,16 @@ Potong dari atas ke bawah:
 4. Tampilan mobile (pastikan desktop rapi).
 
 **Jangan dipotong:** mesin skor + test, halaman Detail Tantangan dengan alasan kecocokan, halaman Analitik minimal 2 grafik, deploy publik, README.
+
+## Iterasi setelah MVP — referensi publik dan katalog
+
+Atas permintaan pemilik, delapan nama mitra dan topik terpilih merujuk sumber DTETI, dengan atribut kecocokan tetap simulasi. Migrasi 003 dan batas sumber dicatat pada ADR 001.
+
+- [x] Sumber publik dipisahkan melalui metadata URL.
+- [x] Pencarian judul/organisasi digabung dengan filter dan tersimpan di URL.
+- [x] Sidebar desktop, kartu katalog, dan panel penjelasan sumber.
+- [x] DESIGN.md, brief, README, dan arsitektur disinkronkan.
+- [x] 87 test, lint dan build lolos.
+- [x] Screenshot referensi MagangHub dan Octave telah ditinjau dari folder lokal pemilik.
+- [x] Tema gelap, chip filter individual, pencarian beranda, dan hierarki kecocokan; 90 test lolos.
+- [ ] Verifikasi visual hasil aplikasi di browser masih tertunda.

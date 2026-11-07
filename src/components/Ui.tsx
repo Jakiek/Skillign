@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 
 export function DataContoh() { return <span className="text-xs font-semibold text-muted">Data contoh</span>; }
 export function SkillChip({ children, variant = 'netral' }: { children: ReactNode; variant?: 'netral' | 'wajib' | 'cocok' | 'kurang' }) {
-  return <span className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs ${variant === 'cocok' ? 'border-cocok text-cocok' : variant === 'kurang' ? 'border-transparent bg-kurang-soft text-[#87480E]' : 'border-line text-ink'} ${variant === 'wajib' ? 'font-semibold' : ''}`}>
+  return <span className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs ${variant === 'cocok' ? 'border-cocok text-cocok' : variant === 'kurang' ? 'border-transparent bg-kurang-soft text-warning' : 'border-line text-ink'} ${variant === 'wajib' ? 'font-semibold' : ''}`}>
     {variant === 'cocok' && <span aria-hidden="true">✓</span>}{variant === 'kurang' && <span aria-hidden="true">○</span>}{children}
   </span>;
 }

@@ -1,4 +1,4 @@
-# QA Jembatan
+# QA Skillign
 
 Status: coding MVP dan pemeriksaan otomatis selesai; verifikasi browser dan rilis publik belum selesai.
 
@@ -6,7 +6,7 @@ Status: coding MVP dan pemeriksaan otomatis selesai; verifikasi browser dan rili
 
 - `npm run lint`: lolos tanpa warning lint.
 - `npm run build`: lolos, mencakup typecheck frontend, server, dan adapter API.
-- `npm run test:run`: 83 pengujian pada lima berkas, seluruhnya lolos.
+- `npm run test:run`: 90 pengujian pada lima berkas, seluruhnya lolos.
 - Domain: rumus, alasan skor, urutan stabil, saran belajar, validasi batas form.
 - SQL/API: migrasi berulang, seed identik dan rollback, constraint, filter, analitik, penyimpanan atomik, duplikat minat bersamaan.
 - UI jsdom: filter URL, reset, navigasi dua arah, retry, respons asinkron, tabel analitik, form, dialog, status sukses, navigasi aktif, fokus kesalahan, fokus setelah navigasi, dan judul dokumen.
@@ -46,3 +46,19 @@ Saat browser tersedia, jalankan `npm run dev:contoh` dan `npm run dev`, lalu:
 - Ambil tiga screenshot asli: detail tantangan beserta kandidat, analitik, dan daftar tantangan dengan filter; simpan di `docs/screenshots/`.
 
 Koneksi Neon, migrasi/seed pada PostgreSQL eksternal, kesesuaian rewrite Vercel, refresh URL langsung pada hosting, dan target waktu muat analitik <2 detik belum diverifikasi. Pembuatan repo publik serta deploy tetap ditunda sesuai arahan pemilik.
+
+## Pembaruan referensi publik dan UI
+
+- Migrasi 003, seed, dan API memisahkan sumber nama/topik publik dari atribut simulasi.
+- Pengujian memverifikasi delapan topik dengan sumber, pasangan organisasi yang benar, 22 judul simulasi, pencarian judul/organisasi, kombinasi filter, serta input SQL yang diperlakukan sebagai teks.
+- UI mendukung pencarian URL dan reset, sidebar desktop, kartu katalog, serta penjelasan sumber pada daftar/detail.
+- Tiga pengujian integrasi dan satu pengujian UI tambahan lolos; total 87 test, lint/build lolos.
+- Pemeriksaan visual perubahan terbaru belum dilakukan karena browser pengujian masih gagal dijalankan. Screenshot referensi Octave kini sudah ditinjau dari folder lokal pemilik; hasil aplikasi sendiri tetap belum diverifikasi visual di browser.
+
+## Iterasi berdasarkan screenshot pemilik
+
+Dua screenshot lokal MagangHub dan Octave sudah diperiksa. Pencarian beranda, chip filter individual, panel ringkasan terpadu, pengelompokan bukti kecocokan, ikon navigasi, serta tema gelap dengan pilihan tersimpan ditambahkan. Test memakai fixture browser Storage dalam memori karena storage native Node 25 belum terinisialisasi pada lingkungan pengujian; pilihan tema dan persistensinya tetap diuji. Total 90 pengujian lolos setelah perbaikan; lint/build berhasil. Tata letak dan kontras kedua tema pada browser nyata masih perlu diperiksa.
+
+## Pergantian identitas Skillign
+
+Nama produk, judul tab browser, metadata, nama paket, dokumentasi, dan teks simulasi diselaraskan menjadi Skillign. Navigasi/judul memakai Opportunities, Talents, Insights, dan New opportunity; penjelasan memakai bahasa Indonesia ringkas. Uji navigasi, fokus, judul halaman, form, pencarian, dan tema tetap lolos: 90 test, lint/build berhasil. Data contoh serta keterangan sumber tetap dipertahankan.

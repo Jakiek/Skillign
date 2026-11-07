@@ -1,7 +1,9 @@
-# Jembatan
+# Skillign
 
 Prototipe matchmaking industri–akademik untuk portofolio Naufal Dzaky.
-**Prototipe konsep · Data contoh**: semua data yang akan digunakan bersifat sintetis; tidak ada afiliasi resmi dengan organisasi mana pun.
+**Prototipe konsep · Data contoh**: nama delapan mitra dan judul topik terpilih merujuk sumber publik DTETI; atribut kecocokan, talenta, dan minat adalah simulasi; tidak ada afiliasi resmi dengan organisasi mana pun.
+
+Nama produk kini **Skillign**. Navigasi: **Opportunities**, **Talents**, **Insights**, dan **New opportunity**. Nama domain dan merek dagang belum diverifikasi. Folder kerja dan route teknis tetap memakai nama awal untuk menjaga kompatibilitas setup.
 
 ## Menjalankan
 
@@ -35,11 +37,19 @@ npm run dev
 
 Buka URL yang dicetak Vite. Mode ini memakai data sintetis dan tidak membaca atau mengubah database Neon. Data hanya berada dalam memori dan dibuat ulang setiap server contoh dijalankan. PGlite adalah dependensi pengembangan; adapter produksi tetap memakai `pg`. Jangan jalankan `dev:server` dan `dev:contoh` bersamaan karena keduanya menggunakan port 3001.
 
-Halaman tersedia: `/`, `/tantangan`, `/tantangan/:id`, `/talenta`, `/talenta/:id`, `/tantangan/baru`, dan `/analitik`. Filter bidang serta skill tersimpan dalam URL dan ikut berubah saat Back/Forward browser digunakan. Filter mobile dapat dibuka melalui tombol **Filter tantangan**.
+Halaman tersedia: `/`, `/tantangan`, `/tantangan/:id`, `/talenta`, `/talenta/:id`, `/tantangan/baru`, dan `/analitik`. Filter bidang serta skill tersimpan dalam URL dan ikut berubah saat Back/Forward browser digunakan. Filter mobile dapat dibuka melalui tombol **Filter tantangan**. Chip filter aktif dapat dihapus satu per satu. Tombol **Tampilan gelap** pada navigasi mengaktifkan tema arang/ungu dan menyimpan pilihan di browser.
+
+## Data referensi DTETI
+
+Snapshot delapan mitra dan delapan topik terpilih dari [daftar DTETI 2027](https://sarjana.jteti.ugm.ac.id/akademik/penjelasan-aktivitas-akademik/daftar-mitra-magang-dteti-2027/) dipakai sebagai referensi. Ini bukan seluruh daftar mitra dan bukan layanan pendaftaran resmi. Dua puluh dua judul tantangan lainnya dibuat untuk simulasi.
+
+Nama/judul yang memiliki sumber disimpan terpisah dari skill, bidang, deskripsi, durasi, status, talenta, dan minat yang merupakan Data contoh. Kota organisasi publik belum diverifikasi. Analitik menggambarkan dataset demonstrasi, bukan statistik DTETI. Lihat [keputusan data](docs/decisions/001_referensi-publik-dteti.md).
+
+Setelah memperbarui kode, restart `npm run dev:contoh` untuk memuat snapshot baru. Jika memakai database lokal sendiri, jalankan `npm run migrasi` agar kolom sumber dari migrasi 003 tersedia. Seed tetap mengosongkan tabel dan hanya boleh dijalankan pada database contoh yang boleh direset.
 
 ## Database dan API
 
-Salin `.env.example` menjadi `.env` lalu isi `DATABASE_URL` dengan koneksi PostgreSQL khusus Jembatan. Frontend masih dapat dijalankan tanpa database.
+Salin `.env.example` menjadi `.env` lalu isi `DATABASE_URL` dengan koneksi PostgreSQL khusus Skillign. Frontend masih dapat dijalankan tanpa database.
 
 ```sh
 npm run migrasi
@@ -48,14 +58,14 @@ npm run seed
 npm run dev:server
 ```
 
-Seed mengosongkan tabel proyek dalam satu transaksi, mereset ID, lalu mengisi 40 skill, 12 organisasi fiktif (8 industri, 4 kampus), 30 tantangan, 60 talenta, dan 40 minat. Seed acak 2027 dan timestamp tetap membuat hasil pengulangan identik. Jangan gunakan pada database berisi data yang ingin dipertahankan.
+Seed mengosongkan tabel proyek dalam satu transaksi, mereset ID, lalu mengisi 40 skill, 12 organisasi (8 nama mitra dari sumber publik, 4 kampus fiktif), 30 tantangan, 60 talenta, dan 40 minat. Seed acak 2027 dan timestamp tetap membuat hasil pengulangan identik. Jangan gunakan pada database berisi data yang ingin dipertahankan.
 
 Frontend Vite meneruskan `/api` ke Express di `127.0.0.1:3001`:
 
 - `GET /api/skill`: katalog skill.
-- `GET /api/organisasi`: organisasi fiktif untuk pilihan form.
+- `GET /api/organisasi`: organisasi referensi/contoh untuk pilihan form.
 - `GET /api/tantangan`: tantangan terbuka, organisasi, kebutuhan skill, dan jumlah minat.
-- `GET /api/tantangan?bidang=web&skill=react,typescript`: semua skill terpilih harus tersedia (AND); slug dinormalkan ke huruf kecil.
+- `GET /api/tantangan?q=JALA&bidang=ai&skill=python`: semua skill terpilih harus tersedia (AND); slug dinormalkan ke huruf kecil.
 - `GET /api/talenta`: profil talenta dan level skill.
 - `GET /api/analitik`: ringkasan program, 10 permintaan skill teratas, kesenjangan, distribusi bidang, dan corong.
 - `POST /api/tantangan`: simpan tantangan dan skill dalam satu statement atomik; respons 201 `{ id }`.
@@ -136,7 +146,7 @@ Grafik memakai Recharts dengan tabel data yang dapat dibuka sebagai alternatif a
 
 ## QA dan kesiapan rilis
 
-83 pengujian otomatis, lint, dan build lolos. Lihat [laporan QA](docs/QA.md) untuk bukti, perbaikan Fase 6, status dependensi, serta langkah verifikasi browser. Audit dependency masih melaporkan 9 temuan moderate (0 high/critical).
+90 pengujian otomatis, lint, dan build lolos. Lihat [laporan QA](docs/QA.md) untuk bukti, perbaikan Fase 6, status dependensi, serta langkah verifikasi browser. Audit dependency masih melaporkan 9 temuan moderate (0 high/critical).
 
 Screenshot asli desktop/mobile belum tersedia karena browser pengujian gagal tersambung. Kode MVP belum dinyatakan siap rilis publik sampai pemeriksaan visual, dialog native, dependensi, koneksi Neon, dan deployment selesai.
 

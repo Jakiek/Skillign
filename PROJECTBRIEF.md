@@ -1,4 +1,4 @@
-# PROJECT BRIEF — Jembatan
+# PROJECT BRIEF — Skillign
 
 > Platform matchmaking industri–akademik: perusahaan memasang tantangan nyata, mahasiswa dan dosen menemukan tantangan yang cocok dengan skill mereka, dan semua aktivitasnya bisa dianalisis.
 
@@ -10,12 +10,12 @@ Dokumen ini adalah PRD (product requirements document). Rancangan teknis ada di 
 
 | | |
 |---|---|
-| **Nama** | Jembatan |
+| **Nama** | Skillign |
 | **Jenis** | Aplikasi web fullstack (prototipe konsep) |
 | **Pemilik** | Naufal Dzaky — Teknologi Informasi UGM |
 | **Tujuan utama** | Portofolio pengembangan aplikasi web dan analitik data |
 | **Target waktu MVP** | 1 hari kerja (lihat ROADMAP) |
-| **Status data** | **Data contoh (sintetis)**. Bukan data perusahaan atau kampus mana pun. |
+| **Status data** | **Data contoh**. Nama/topik terpilih memakai referensi publik DTETI; atribut pencocokan, talenta, dan minat disimulasikan. |
 
 ### Kenapa proyek ini ada
 
@@ -24,7 +24,7 @@ Proyek ini menunjukkan dua kemampuan sekaligus:
 1. **Pengembangan aplikasi web** — alur lengkap dari database, API, sampai antarmuka yang di-deploy.
 2. **Analitik data** — halaman analitik yang menghitung permintaan skill, ketersediaan skill, dan kesenjangannya dengan SQL.
 
-> **Catatan kejujuran.** Jembatan adalah prototipe konsep buatan sendiri. Tidak berafiliasi dengan perusahaan atau institusi mana pun. Semua nama organisasi dan orang di data contoh adalah fiktif dan diberi label "Data contoh" di antarmuka.
+> **Catatan kejujuran.** Skillign adalah prototipe konsep buatan sendiri. Tidak berafiliasi dengan perusahaan atau institusi mana pun. Delapan nama mitra dan judul topik terpilih mengacu pada sumber publik DTETI 2027 atas permintaan pemilik. Nama orang dan kampus contoh tetap fiktif; deskripsi, bidang, skill, durasi, status, serta minat merupakan simulasi berlabel "Data contoh". Sumber ditampilkan di UI; ini bukan informasi pendaftaran resmi.
 
 ---
 

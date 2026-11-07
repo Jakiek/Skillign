@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 export const skemaFilterTantangan = z.object({
+  q: z.string().trim().max(100).optional(),
   bidang: z.enum(['web', 'data', 'iot', 'desain', 'ai']).optional(),
   skill: z.string().max(500).transform((value) =>
     [...new Set(value.split(',').map((id) => id.trim().toLowerCase()).filter(Boolean))],

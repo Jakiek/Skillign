@@ -1,7 +1,7 @@
 import { readFile } from 'node:fs/promises';
 import type { Database } from './database';
 
-const migrasi = ['001_skema.sql', '002_view_analitik.sql'] as const;
+const migrasi = ['001_skema.sql', '002_view_analitik.sql', '003_sumber_referensi.sql'] as const;
 
 // Pemanggil menyediakan satu koneksi: transaksi tidak boleh berpindah pool client.
 export async function jalankanMigrasi(db: Database) {

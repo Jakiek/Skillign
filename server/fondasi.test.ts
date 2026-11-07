@@ -31,7 +31,7 @@ async function snapshot() {
 describe('fondasi PostgreSQL dan API', () => {
   it('migrasi dapat diulang tanpa menghapus data', async () => {
     await jalankanMigrasi(db);
-    expect((await db.query('SELECT * FROM migrasi')).rows).toHaveLength(2);
+    expect((await db.query('SELECT * FROM migrasi')).rows).toHaveLength(3);
     expect((await db.query('SELECT * FROM tantangan')).rows).toHaveLength(30);
   });
   it('seed dua kali menghasilkan semua baris yang identik', async () => {
@@ -269,6 +269,28 @@ describe('fondasi PostgreSQL dan API', () => {
     const { body } = await request(app).get('/api/organisasi').expect(200);
     expect(body).toHaveLength(12);
     expect(body[0]).toMatchObject({ id: expect.any(Number), nama: expect.any(String), kota: expect.any(String) });
+  });
+  it('delapan topik bersumber publik, atribut pencocokan tetap data contoh', async () => {
+    const data = (await request(app).get('/api/tantangan').expect(200)).body as (DetailTantangan['tantangan'])[];
+    const sourced = data.filter((t) => t.sumberUrl);
+    expect(sourced).toHaveLength(8);
+    expect(sourced.find((t) => t.judul === 'ETL and Data Ingestion')?.organisasi.nama).toBe('PT Global Data Inspirasi');
+    expect(sourced.every((t) => t.sumberUrl === t.organisasi.sumberUrl && t.dataContoh)).toBe(true);
+    expect(data.filter((t) => !t.sumberUrl)).toHaveLength(22);
+    const org = await db.query('SELECT id FROM organisasi WHERE sumber_url IS NOT NULL');
+    expect(org.rows).toHaveLength(8);
+  });
+  it('pencarian judul dan organisasi tidak peka kapital serta bergabung dengan filter', async () => {
+    const judul = await request(app).get('/api/tantangan?q=etl%20and%20data').expect(200);
+    expect(judul.body).toHaveLength(1);
+    expect(judul.body[0].judul).toBe('ETL and Data Ingestion');
+    const org = await request(app).get('/api/tantangan?q=GLOBAL%20DATA&bidang=data&skill=python').expect(200);
+    expect(org.body.length).toBeGreaterThan(0);
+    for (const row of org.body) { expect(row.organisasi.nama).toBe('PT Global Data Inspirasi'); expect(row.bidang).toBe('data'); }
+  });
+  it('pencarian memperlakukan karakter SQL sebagai teks dan membatasi panjang', async () => {
+    expect((await request(app).get('/api/tantangan').query({ q: "' OR TRUE --" }).expect(200)).body).toEqual([]);
+    await request(app).get('/api/tantangan').query({ q: 'x'.repeat(101) }).expect(400);
   });
   it('endpoint tak dikenal memberi error JSON', async () => {
     expect((await request(app).get('/api/asing').expect(404)).body).toHaveProperty('error');

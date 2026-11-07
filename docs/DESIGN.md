@@ -1,4 +1,4 @@
-# DESIGN — Sistem Desain Jembatan
+# DESIGN — Sistem Desain Skillign
 
 ## 1. Arah visual
 
@@ -6,6 +6,12 @@ Tenang, rapi, dan "dashboard-like" — tujuan utamanya **membaca kecocokan denga
 
 - **Yang diambil:** kartu dengan hierarki jelas, chip skill, angka besar untuk ringkasan.
 - **Yang tidak diambil:** ilustrasi besar, gradien mencolok, animasi berlebihan.
+
+Navigasi utama menjadi sidebar tetap selebar 240 px mulai 1024 px. Di layar kecil kembali ke header dengan navigasi membungkus. Konten menggunakan latar abu kehijauan, kartu putih, border tipis, dan aksen hijau; font tetap Inter. Avatar organisasi berupa inisial teks, bukan logo resmi.
+
+Referensi utama adalah dua screenshot milik pemilik dalam folder lokal `Frontend ins`: MagangHub (22.34.12) dan Octave Customer Health & Account Detail (22.36.50). Keduanya sudah ditinjau secara visual. MagangHub memberi acuan filter, pencarian, dan chip aktif; Octave memberi acuan sidebar, kepadatan informasi, serta tema gelap. Screenshot referensi tidak disalin sebagai aset aplikasi atau dipublikasikan di repo.
+
+Hierarki disesuaikan dengan Skillign: pencarian menjadi titik masuk beranda, ringkasan program berada dalam satu panel terbagi, dan kartu rekomendasi menampilkan nama serta skor di atas bukti skill yang berkelompok. Tidak ada klaim sebagai salinan persis desain referensi.
 
 ## 2. Prinsip
 
@@ -22,20 +28,21 @@ Tenang, rapi, dan "dashboard-like" — tujuan utamanya **membaca kecocokan denga
 |---|---|---|
 | `ink` | `#1C2430` | Teks utama, header |
 | `muted` | `#5B6573` | Teks sekunder |
-| `line` | `#E4E1DA` | Garis, border kartu |
-| `bg` | `#F7F6F2` | Latar halaman |
+| `line` | `#E0E6E2` | Garis, border kartu |
+| `bg` | `#F4F6F5` | Latar halaman |
 | `card` | `#FFFFFF` | Latar kartu |
-| `brand` | `#1F6F78` | Tombol utama, link, tab aktif |
-| `brand-soft` | `#E3F0F1` | Latar chip terpilih |
+| `brand` | `#28634F` | Tombol utama, link, tab aktif |
+| `brand-soft` | `#E9F2EC` | Latar chip terpilih |
 | `cocok` | `#2E7D4F` | Skill cocok, skor tinggi |
 | `kurang` | `#C9741F` | Skill wajib yang belum dimiliki |
 | `kurang-soft` | `#F6E7D5` | Latar chip "kurang" |
 
-Warna grafik (berurutan): `#1F6F78`, `#C9741F`, `#5B8DB8`, `#8A6FB0`, `#7A8B5C`.
+Warna grafik (berurutan): `#28634F`, `#C9741F`, `#5B8DB8`, `#8A6FB0`, `#7A8B5C`.
 
 ### 3.2 Tipografi
 
-- Font: **Inter** (fallback `system-ui, sans-serif`).
+- Wordmark Skillign: **Libre Baskerville Italic**, bobot 400, 32 px, tracking -0.035em. Fallback Georgia/serif. Terinspirasi pasangan serif ekspresif dan sans pada gambar referensi tipografi pemilik (`Util/Font .png`).
+- Navigasi dan isi: **Inter** (fallback `system-ui, sans-serif`) agar teks padat dan angka mudah dibaca.
 - Skala: 12 / 14 / 16 / 20 / 24 / 32 px. Judul halaman 32 semibold, judul kartu 16–18 semibold, isi 14–16 regular.
 - Angka di ringkasan dan skor memakai `tabular-nums`.
 
@@ -71,7 +78,7 @@ Tiga titik: ●○○ dasar, ●●○ menengah, ●●● mahir. Ada tooltip te
 
 | Komponen | Isi |
 |---|---|
-| `Header` | Logo teks "Jembatan", navigasi (Tantangan, Talenta, Analitik, Buat Tantangan), badge "Prototipe konsep · Data contoh" |
+| `Header` | Logo teks "Skillign", navigasi (Opportunities, Talents, Insights, New opportunity), badge "Prototipe konsep · Data contoh" |
 | `KartuTantangan` | Judul, organisasi + kota, bidang, durasi, chip skill, jumlah minat |
 | `KartuTalenta` | Nama, peran, prodi + kampus, chip skill dengan level |
 | `KartuRekomendasi` | `SkorBadge` di kiri, nama/judul, chip cocok + kurang |
@@ -84,13 +91,13 @@ Tiga titik: ●○○ dasar, ●●○ menengah, ●●● mahir. Ada tooltip te
 ## 6. Tata letak halaman
 
 ### Beranda `/`
-Hero singkat (judul + 1 kalimat + 2 tombol: "Lihat tantangan", "Buka analitik") → 4 `KartuAngka` → 3 tantangan terbaru.
+Pembuka dua kolom pada layar lebar: judul/pencarian di kiri dan penjelasan kecocokan di kanan. Empat ringkasan berada dalam satu panel terbagi, diikuti tiga tantangan terbaru serta penjelasan sumber publik. Navigasi Lihat tantangan/Buka analitik tetap tersedia.
 
 ### Tantangan `/tantangan`
-Grid 12 kolom: kiri 3 kolom `FilterSkill` + filter bidang; kanan 9 kolom daftar `KartuTantangan` (1 kolom di mobile).
+Pencarian judul/organisasi tersimpan sebagai `q` di URL. Filter di sisi kiri, hasil di kanan. Kartu dua kolom mulai 1280 px, satu kolom di bawahnya. Pada mobile panel filter dapat dibuka lewat tombol. Query, bidang, dan skill terpilih tampil sebagai chip yang dapat dihapus satu per satu tanpa menghapus filter lainnya.
 
 ### Detail tantangan `/tantangan/:id`
-Kiri 7 kolom: judul, organisasi, deskripsi, chip skill (wajib dulu), tombol "Ajukan minat". Kanan 5 kolom: "5 kandidat paling cocok" berisi `KartuRekomendasi`.
+Mulai 1280 px, kiri 7 kolom: judul, organisasi, deskripsi, chip skill (wajib dulu), tombol "Ajukan minat". Kanan 5 kolom: "5 kandidat paling cocok" berisi `KartuRekomendasi`.
 
 ### Talenta `/talenta` dan detail `/talenta/:id`
 Pola sama dengan tantangan. Detail talenta punya kotak "Saran belajar" berisi 3 skill.
@@ -121,3 +128,32 @@ Setiap grafik punya satu kalimat "Cara membaca" di bawah judul.
 - Breakpoint: mobile < 768 px satu kolom; filter jadi tombol "Filter" yang membuka panel.
 - Kontras teks minimal 4.5:1. Chip tidak mengandalkan warna saja (ada ikon ✓/○).
 - Semua tombol bisa difokus dengan keyboard; dialog menjebak fokus dan tertutup dengan Esc.
+
+## 9. Tema gelap
+
+Tombol Tampilan gelap di navigasi memakai `aria-pressed` dan menyimpan pilihan lokal. Default terang. Warna Tailwind berasal dari variabel CSS agar kartu, teks, border, input, dialog, dan grafik mengikuti tema yang sama.
+
+| Token | Gelap |
+| --- | --- |
+| bg | #111419 |
+| card | #181C22 |
+| ink | #EDEFF2 |
+| muted | #A9B0BB |
+| line | #2F343E |
+| brand | #BDADF6 |
+| brand-soft | #2C2541 |
+| cocok | #80D1A5 |
+| warning | #F6C185 |
+| kurang-soft | #3E2C1D |
+
+Tema terang mempertahankan hijau, tema gelap memakai aksen ungu. Warna semantik tetap membedakan skill cocok dan kurang. Tidak ada animasi otomatis pada grafik; fokus keyboard tetap terlihat di kedua tema.
+
+## 10. Bahasa dan identitas Skillign
+
+Nama produk: **Skillign**, menekankan pencocokan skill yang dapat dijelaskan serta analitik permintaan–ketersediaan. Navigasi dan judul halaman menggunakan Opportunities, Talents, Insights, serta New opportunity. Penjelasan, label form, dan pesan sistem memakai bahasa Indonesia yang ringkas dan konkret.
+
+Istilah antarmuka: proyek untuk tantangan dan kandidat untuk profil talenta. Kata skill dipakai konsisten. Hindari slogan umum tentang kolaborasi atau peluang; jelaskan fungsi dan tindakan langsung. Judul beranda: “Cocokkan skill. Temukan proyek yang sesuai.” Label Data contoh, batas data simulasi, dan keterangan sumber tetap terlihat.
+
+Nama domain dan merek dagang belum diverifikasi. Pergantian merek tidak mengubah nama folder kerja, URL, tipe domain, atau tabel database. Preferensi tema lama tetap dibaca agar pilihan pengguna tidak hilang; penyimpanan berikutnya memakai kunci Skillign.
+
+Font wordmark disajikan lokal melalui paket font dengan subset Latin dan hanya varian italic 400 yang dipakai. Tidak ada italic sintetis atau permintaan font eksternal saat web dibuka.

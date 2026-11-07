@@ -18,7 +18,7 @@ const analitik: Analitik = {
   permintaanSkill: [{ skillId: 'react', nama: 'React', permintaan: 6 }],
   kesenjanganSkill: [{ skillId: 'react', nama: 'React', permintaan: 6, ketersediaan: 0, rasio: null }],
   tantanganPerBidang: [{ bidang: 'web', nama: 'Web', jumlah: 6 }],
-  funnel: [{ tahap: 'Tantangan terbuka', jumlah: 30 }, { tahap: 'Punya kandidat ≥60', jumlah: 18 }, { tahap: 'Punya minat', jumlah: 20 }],
+  funnel: [{ tahap: 'Proyek terbuka', jumlah: 30 }, { tahap: 'Punya kandidat ≥60', jumlah: 18 }, { tahap: 'Punya minat', jumlah: 20 }],
 };
 function mockApi() {
   return vi.stubGlobal('fetch', vi.fn(async (input: string) => {
@@ -37,30 +37,80 @@ function mockApi() {
 }
 function Location() { const location = useLocation(); return <output aria-label="URL saat ini">{location.pathname}{location.search}</output>; }
 function mount(path: string) { return render(<MemoryRouter initialEntries={[path]} future={{ v7_startTransition: true, v7_relativeSplatPath: true }}><App /><Location /></MemoryRouter>); }
-beforeEach(() => { vi.stubGlobal('scrollTo', vi.fn()); });
+beforeEach(() => {
+  // Vitest/Node 25 expose uninitialized native storage; provide a browser Storage fixture.
+  const entries = new Map<string, string>();
+  const storage: Storage = {
+    get length() { return entries.size; },
+    clear: () => entries.clear(),
+    key: (index) => [...entries.keys()][index] ?? null,
+    getItem: (key) => entries.get(key) ?? null,
+    setItem: (key, value) => { entries.set(key, String(value)); },
+    removeItem: (key) => { entries.delete(key); },
+  };
+  Object.defineProperty(window, 'localStorage', { configurable: true, value: storage });
+  vi.stubGlobal('scrollTo', vi.fn());
+});
 afterEach(() => { cleanup(); vi.unstubAllGlobals(); });
 
 // jsdom belum menyediakan dialog native; simulasi hanya membuka/menutup, bukan focus trap browser.
 Object.defineProperty(HTMLDialogElement.prototype, 'showModal', { configurable: true, value() { this.setAttribute('open', ''); } });
 Object.defineProperty(HTMLDialogElement.prototype, 'close', { configurable: true, value() { this.removeAttribute('open'); } });
 
-describe('halaman Jembatan', () => {
+describe('halaman Skillign', () => {
+  it('tema gelap bisa diaktifkan dan pilihannya disimpan', async () => {
+    mockApi(); const user = userEvent.setup(); mount('/talenta');
+    const toggle = screen.getByRole('button', { name: 'Tampilan gelap' });
+    expect(toggle.getAttribute('aria-pressed')).toBe('false');
+    await user.click(toggle);
+    expect(document.documentElement.dataset.theme).toBe('dark');
+    expect(window.localStorage.getItem('skillign-theme')).toBe('dark');
+    await user.click(toggle);
+    expect(document.documentElement.dataset.theme).toBe('light');
+  });
+  it('chip filter bisa dihapus satu per satu tanpa menghilangkan filter lain', async () => {
+    mockApi(); const user = userEvent.setup(); mount('/tantangan?bidang=web&skill=react,sql');
+    await user.click(await screen.findByRole('button', { name: 'Hapus filter React' }));
+    expect(screen.getByLabelText('URL saat ini').textContent).toBe('/tantangan?bidang=web&skill=sql');
+    expect(screen.getByRole('button', { name: 'Hapus filter SQL' })).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Hapus filter Bidang: web' })).toBeTruthy();
+  });
+  it('pencarian beranda membuka daftar dengan query yang diketik', async () => {
+    mockApi(); const user = userEvent.setup(); mount('/');
+    await user.type(screen.getByRole('searchbox', { name: 'Cari judul atau organisasi' }), 'JALA');
+    await user.click(screen.getByRole('button', { name: 'Cari proyek' }));
+    await screen.findByRole('heading', { name: 'Opportunities', level: 1 });
+    expect(screen.getByLabelText('URL saat ini').textContent).toBe('/tantangan?q=JALA');
+  });
+  it('pencarian menyimpan q dalam URL, menjaga filter, dan reset membersihkan isian', async () => {
+    mockApi(); const user = userEvent.setup(); mount('/tantangan?bidang=web');
+    await screen.findByRole('link', { name: 'Portal pemesanan bahan' });
+    const input = screen.getByRole('searchbox', { name: 'Cari judul atau organisasi' });
+    await user.type(input, '  Portal  ');
+    await user.click(screen.getByRole('button', { name: 'Cari proyek' }));
+    await waitFor(() => expect(screen.getByLabelText('URL saat ini').textContent).toBe('/tantangan?bidang=web&q=Portal'));
+    await user.click(screen.getByRole('button', { name: 'Filter proyek' }));
+    await user.click(screen.getByRole('checkbox', { name: 'React' }));
+    await waitFor(() => expect(screen.getByLabelText('URL saat ini').textContent).toContain('q=Portal&skill=react'));
+    await user.click(screen.getByRole('button', { name: 'Reset filter' }));
+    expect((screen.getByRole('searchbox') as HTMLInputElement).value).toBe('');
+  });
   it('hanya navigasi Buat tantangan yang aktif saat form dibuka', async () => {
     mockApi(); mount('/tantangan/baru');
     await screen.findByLabelText('Judul');
     const nav = screen.getByRole('navigation', { name: 'Navigasi utama' });
-    expect(within(nav).getByRole('link', { name: 'Buat tantangan' }).getAttribute('aria-current')).toBe('page');
-    expect(within(nav).getByRole('link', { name: 'Tantangan' }).hasAttribute('aria-current')).toBe(false);
+    expect(within(nav).getByRole('link', { name: 'New opportunity' }).getAttribute('aria-current')).toBe('page');
+    expect(within(nav).getByRole('link', { name: 'Opportunities' }).hasAttribute('aria-current')).toBe(false);
     expect(nav.querySelectorAll('[aria-current="page"]')).toHaveLength(1);
   });
   it('navigasi memperbarui judul dokumen dan fokus konten, filter mempertahankan fokus', async () => {
     mockApi(); const user = userEvent.setup(); mount('/talenta');
     await screen.findByRole('link', { name: 'Aruna Contoh' });
-    await user.click(screen.getByRole('link', { name: 'Tantangan' }));
+    await user.click(screen.getByRole('link', { name: 'Opportunities' }));
     await screen.findByRole('link', { name: 'Portal pemesanan bahan' });
     expect(document.activeElement).toBe(screen.getByRole('main'));
-    await waitFor(() => expect(document.title).toBe('Tantangan · Jembatan'));
-    await user.click(screen.getByRole('button', { name: 'Filter tantangan' }));
+    await waitFor(() => expect(document.title).toBe('Opportunities · Skillign'));
+    await user.click(screen.getByRole('button', { name: 'Filter proyek' }));
     const input = screen.getByRole('checkbox', { name: 'React' });
     await user.click(input);
     await waitFor(() => expect(screen.getByLabelText('URL saat ini').textContent).toContain('skill=react'));
@@ -71,7 +121,7 @@ describe('halaman Jembatan', () => {
     vi.mocked(fetch).mockImplementation((input, init) => init?.method === 'POST' ? Promise.resolve({ ok: true, json: async () => ({ id: 1 }) } as Response) : impl(input, init));
     const user = userEvent.setup(); mount('/tantangan/baru');
     await screen.findByLabelText('Judul');
-    await user.click(screen.getByRole('button', { name: 'Simpan tantangan' }));
+    await user.click(screen.getByRole('button', { name: 'Simpan proyek' }));
     expect(screen.getByText('Judul minimal 5 karakter.')).toBeTruthy();
     expect(document.activeElement).toBe(screen.getByLabelText('Judul'));
     expect(screen.getByLabelText('Judul').getAttribute('aria-invalid')).toBe('true');
@@ -81,9 +131,9 @@ describe('halaman Jembatan', () => {
     await user.selectOptions(screen.getByLabelText('Organisasi contoh'), '1');
     await user.click(screen.getAllByRole('checkbox', { name: 'React' })[0]);
     expect((screen.getAllByRole('checkbox', { name: 'React' })[1] as HTMLInputElement).disabled).toBe(true);
-    await user.click(screen.getByRole('button', { name: 'Simpan tantangan' }));
+    await user.click(screen.getByRole('button', { name: 'Simpan proyek' }));
     await screen.findByRole('heading', { name: 'Portal pemesanan bahan' });
-    expect(screen.getByText('Tantangan berhasil dibuat sebagai data contoh.')).toBeTruthy();
+    expect(screen.getByText('Proyek berhasil disimpan sebagai Data contoh.')).toBeTruthy();
     const call = vi.mocked(fetch).mock.calls.find(([, init]) => init?.method === 'POST');
     expect(JSON.parse(String(call?.[1]?.body))).toMatchObject({ organisasiId: 1, skillWajib: ['react'], skillTambahan: [] });
   });
@@ -93,11 +143,11 @@ describe('halaman Jembatan', () => {
     const user = userEvent.setup(); mount('/tantangan/1');
     const trigger = await screen.findByRole('button', { name: 'Ajukan minat' });
     await user.click(trigger);
-    await screen.findByLabelText('Talenta', { selector: 'select' });
-    await user.selectOptions(screen.getByLabelText('Talenta', { selector: 'select' }), '1');
+    await screen.findByLabelText('Kandidat', { selector: 'select' });
+    await user.selectOptions(screen.getByLabelText('Kandidat', { selector: 'select' }), '1');
     await user.click(screen.getByRole('button', { name: 'Kirim minat' }));
     expect((await screen.findByRole('alert')).textContent).toContain('sudah mengajukan minat');
-    expect((screen.getByLabelText('Talenta', { selector: 'select' }) as HTMLSelectElement).value).toBe('1');
+    expect((screen.getByLabelText('Kandidat', { selector: 'select' }) as HTMLSelectElement).value).toBe('1');
     fireEvent(screen.getByRole('dialog'), new Event('cancel', { cancelable: true }));
     expect(screen.queryByRole('dialog')).toBeNull();
     expect(document.activeElement).toBe(trigger);
@@ -107,10 +157,10 @@ describe('halaman Jembatan', () => {
     vi.mocked(fetch).mockImplementation((input, init) => init?.method === 'POST' ? Promise.resolve({ ok: true, json: async () => ({ id: 41 }) } as Response) : impl(input, init));
     const user = userEvent.setup(); mount('/tantangan/1');
     await user.click(await screen.findByRole('button', { name: 'Ajukan minat' }));
-    await screen.findByLabelText('Talenta', { selector: 'select' });
+    await screen.findByLabelText('Kandidat', { selector: 'select' });
     await user.click(screen.getByRole('button', { name: 'Kirim minat' }));
-    expect(screen.getByText('Pilih satu talenta.')).toBeTruthy();
-    await user.selectOptions(screen.getByLabelText('Talenta', { selector: 'select' }), '1');
+    expect(screen.getByText('Pilih satu kandidat.')).toBeTruthy();
+    await user.selectOptions(screen.getByLabelText('Kandidat', { selector: 'select' }), '1');
     await user.click(screen.getByRole('button', { name: 'Kirim minat' }));
     await screen.findByText('Minat berhasil dicatat sebagai data contoh.');
     expect(screen.queryByRole('dialog')).toBeNull();
@@ -122,7 +172,7 @@ describe('halaman Jembatan', () => {
     mockApi(); const user = userEvent.setup(); mount('/analitik');
     await screen.findByRole('heading', { name: 'Kesenjangan skill' });
     expect(screen.getByText('60%')).toBeTruthy();
-    for (const title of ['10 skill paling dicari', 'Kesenjangan skill', 'Tantangan per bidang', 'Corong kolaborasi']) {
+    for (const title of ['10 skill paling dicari', 'Kesenjangan skill', 'Proyek per bidang', 'Corong kolaborasi']) {
       await user.click(screen.getByText(`Lihat tabel data: ${title}`));
     }
     expect(screen.getAllByRole('table')).toHaveLength(4);
@@ -135,16 +185,16 @@ describe('halaman Jembatan', () => {
     await screen.findByText('60%');
     expect(screen.getByText('30')).toBeTruthy();
     await user.click(screen.getByRole('link', { name: 'Buka analitik' }));
-    await screen.findByRole('heading', { name: 'Analitik program' });
+    await screen.findByRole('heading', { name: 'Insights' });
   });
   it('filter mengikuti URL, dapat diubah, dan reset mengembalikan daftar', async () => {
     mockApi(); const user = userEvent.setup(); mount('/tantangan?skill=react&bidang=web');
     await screen.findByRole('link', { name: 'Portal pemesanan bahan' });
-    await user.click(screen.getByRole('button', { name: 'Filter tantangan' }));
+    await user.click(screen.getByRole('button', { name: 'Filter proyek' }));
     expect((screen.getByRole('checkbox', { name: 'React' }) as HTMLInputElement).checked).toBe(true);
     expect((screen.getByLabelText('Bidang') as HTMLSelectElement).value).toBe('web');
     await user.click(screen.getByRole('checkbox', { name: 'SQL' }));
-    await screen.findByRole('heading', { name: 'Belum ada tantangan yang sesuai' });
+    await screen.findByRole('heading', { name: 'Belum ada proyek yang sesuai' });
     expect(screen.getByLabelText('URL saat ini').textContent).toContain('skill=react%2Csql');
     await user.click(screen.getAllByRole('button', { name: 'Reset filter' })[0]);
     await screen.findByRole('link', { name: 'Portal pemesanan bahan' });
@@ -152,7 +202,7 @@ describe('halaman Jembatan', () => {
   });
   it('filter mobile membuka dan menutup panel dengan status aksesibel', async () => {
     mockApi(); const user = userEvent.setup(); mount('/tantangan');
-    const button = await screen.findByRole('button', { name: 'Filter tantangan' });
+    const button = await screen.findByRole('button', { name: 'Filter proyek' });
     expect(button.getAttribute('aria-expanded')).toBe('false');
     await user.click(button); expect(button.getAttribute('aria-expanded')).toBe('true');
     await user.click(button); expect(button.getAttribute('aria-expanded')).toBe('false');
@@ -160,14 +210,14 @@ describe('halaman Jembatan', () => {
   it('detail menunjukkan skor, alasan, label data contoh, dan navigasi dua arah', async () => {
     mockApi(); const user = userEvent.setup(); mount('/tantangan/1');
     await screen.findByRole('heading', { name: 'Portal pemesanan bahan' });
-    const rekomendasi = screen.getByRole('region', { name: '5 kandidat paling cocok' });
+    const rekomendasi = screen.getByRole('region', { name: '5 kandidat paling sesuai' });
     expect(within(rekomendasi).getByText('40')).toBeTruthy();
     expect(within(rekomendasi).getByText('Wajib belum dimiliki')).toBeTruthy();
     expect(within(rekomendasi).getByText('SQL')).toBeTruthy();
     expect(within(rekomendasi).getByText('Data contoh')).toBeTruthy();
     await user.click(screen.getByRole('link', { name: 'Aruna Contoh' }));
     await screen.findByRole('heading', { name: 'Aruna Contoh' });
-    expect(screen.getByRole('heading', { name: 'Saran belajar' })).toBeTruthy();
+    expect(screen.getByRole('heading', { name: 'Skill untuk dikembangkan' })).toBeTruthy();
     expect(screen.getByLabelText('Level Mahir')).toBeTruthy();
     await user.click(screen.getByRole('link', { name: 'Portal pemesanan bahan' }));
     await screen.findByRole('heading', { name: 'Portal pemesanan bahan' });
@@ -184,7 +234,7 @@ describe('halaman Jembatan', () => {
   it('404 detail memberi pesan manusiawi dan tautan kembali', async () => {
     mockApi(); mount('/tantangan/9999');
     expect((await screen.findByRole('alert')).textContent).toContain('Data tidak ditemukan.');
-    expect(screen.getByRole('link', { name: 'Kembali ke tantangan' }).getAttribute('href')).toBe('/tantangan');
+    expect(screen.getByRole('link', { name: 'Kembali ke proyek' }).getAttribute('href')).toBe('/tantangan');
   });
   it('memuat memakai skeleton, lalu menampilkan konten', async () => {
     let selesai: (value: unknown) => void = () => {};
@@ -199,7 +249,7 @@ describe('halaman Jembatan', () => {
     let selesai: (value: unknown) => void = () => {};
     vi.mocked(fetch).mockImplementation((input, init) => input === '/api/talenta' ? new Promise((resolve) => { selesai = (value) => resolve(value as Response); }) as ReturnType<typeof fetch> : impl(input, init));
     const user = userEvent.setup(); mount('/talenta');
-    await user.click(screen.getByRole('link', { name: 'Tantangan' }));
+    await user.click(screen.getByRole('link', { name: 'Opportunities' }));
     await screen.findByRole('link', { name: 'Portal pemesanan bahan' });
     selesai({ ok: true, json: async () => [talenta] });
     await waitFor(() => expect(screen.queryByRole('link', { name: 'Aruna Contoh' })).toBeNull());

@@ -1,3 +1,4 @@
+import { mitraReferensi, sumberDteti } from '../src/domain/sumber';
 import type { Database } from './database';
 
 const katalog = {
@@ -26,7 +27,7 @@ const pola = [
   { bidang: 'ai', wajib: ['python', 'statistik'], tambahan: ['pandas', 'docker'], judul: ['Klasifikasi umpan balik', 'Prediksi kebutuhan bahan', 'Deteksi anomali sensor', 'Pengelompokan produk', 'Evaluasi model permintaan', 'Pencarian dokumen internal'] },
 ];
 
-// Hanya untuk database contoh khusus Jembatan. Seluruh reset berada dalam transaksi.
+// Hanya untuk database contoh khusus Skillign. Seluruh reset berada dalam transaksi.
 export async function isiDataContoh(db: Database) {
   const random = mulberry32(2027);
   const pilih = (n: number) => Math.floor(random() * n);
@@ -37,16 +38,19 @@ export async function isiDataContoh(db: Database) {
     for (const [kategori, namaSkill] of Object.entries(katalog)) {
       for (const nama of namaSkill) await db.query('INSERT INTO skill VALUES ($1, $2, $3)', [slug(nama), nama, kategori]);
     }
-    const organisasi = ['Reka Awan', 'Lentera Sirkuit', 'Anyam Data', 'Rintis Pangan', 'Karsa Mesin', 'Pijar Logistik', 'Tunas Energi', 'Simpul Kreasi', 'Institut Cakrawala Contoh', 'Politeknik Reka Contoh', 'Universitas Lentera Contoh', 'Akademi Simpul Contoh'];
+    const organisasi = [...mitraReferensi.map((m) => m.nama), 'Institut Cakrawala Contoh', 'Politeknik Reka Contoh', 'Universitas Lentera Contoh', 'Akademi Simpul Contoh'];
     for (const [i, nama] of organisasi.entries()) {
-      await db.query('INSERT INTO organisasi (nama, jenis, kota) VALUES ($1,$2,$3)', [nama, i < 8 ? 'industri' : 'kampus', ['Yogyakarta', 'Bandung', 'Surabaya'][i % 3]]);
+      await db.query('INSERT INTO organisasi (nama, jenis, kota, sumber_url) VALUES ($1,$2,$3,$4)', [nama, i < 8 ? 'industri' : 'kampus', i < 8 ? 'Lokasi belum diverifikasi' : 'Kota contoh', i < 8 ? sumberDteti : null]);
     }
+
     for (let i = 0; i < 30; i++) {
       const polaTantangan = pola[i % 5];
-      const judul = polaTantangan.judul[Math.floor(i / 5)];
-      await db.query(`INSERT INTO tantangan (organisasi_id, judul, deskripsi, bidang, durasi_bulan, data_contoh, dibuat_pada)
-        VALUES ($1,$2,$3,$4,$5,TRUE,$6)`, [1 + i % 12, judul,
-        `Data contoh: ${judul}. Bangun prototipe yang dapat diuji menggunakan dataset sintetis, dokumentasikan kebutuhan pengguna, dan sajikan hasil evaluasi serta panduan penggunaan.`, polaTantangan.bidang, 1 + pilih(6), waktu]);
+      const referensi = mitraReferensi.find((m) => m.index === i);
+      const organisasiId = referensi ? mitraReferensi.indexOf(referensi) + 1 : 1 + i % 12;
+      const judul = referensi?.topik ?? polaTantangan.judul[Math.floor(i / 5)];
+      await db.query(`INSERT INTO tantangan (organisasi_id, judul, deskripsi, bidang, durasi_bulan, data_contoh, dibuat_pada, sumber_url)
+        VALUES ($1,$2,$3,$4,$5,TRUE,$6,$7)`, [organisasiId, judul,
+        `Data contoh: ${judul}. ${referensi ? 'Judul topik mengacu pada halaman publik DTETI. ' : ''}Deskripsi pekerjaan, bidang, skill wajib/tambahan, durasi, talenta, dan minat merupakan simulasi Skillign, bukan persyaratan atau lowongan resmi organisasi.`, polaTantangan.bidang, 1 + pilih(6), waktu, referensi ? sumberDteti : null]);
       for (const [wajib, skill] of [[true, polaTantangan.wajib], [false, polaTantangan.tambahan]] as const) {
         for (const id of skill) await db.query('INSERT INTO tantangan_skill VALUES ($1,$2,$3)', [i + 1, id, wajib]);
       }
@@ -60,7 +64,7 @@ export async function isiDataContoh(db: Database) {
       await db.query(`INSERT INTO talenta (nama, peran, prodi, kampus, bio, data_contoh, dibuat_pada)
         VALUES ($1,$2,$3,$4,$5,TRUE,$6)`, [`${depan[i % 10]} ${belakang[Math.floor(i / 10)]}`, i % 10 === 0 ? 'dosen' : 'mahasiswa',
         ['Teknologi Informasi', 'Teknik Elektro', 'Sistem Informasi'][i % 3], kampus,
-        'Profil fiktif untuk demonstrasi kecocokan skill pada Jembatan.', waktu]);
+        'Profil fiktif untuk demonstrasi kecocokan skill pada Skillign.', waktu]);
       const utama = kelompok[i < 6 ? 0 : i < 12 ? 1 : 2 + i % 3];
       const skill = new Set<string>();
       while (skill.size < 4) skill.add(slug(utama[pilih(utama.length)]));

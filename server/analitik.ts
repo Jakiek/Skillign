@@ -25,6 +25,6 @@ export async function bacaAnalitik(db: Database): Promise<Analitik> {
     permintaanSkill: permintaan.rows.map((s) => ({ skillId: String(s.skillId), nama: String(s.nama), permintaan: Number(s.permintaan) })),
     kesenjanganSkill: kesenjangan.rows.map((s) => ({ skillId: String(s.skillId), nama: String(s.nama), permintaan: Number(s.permintaan), ketersediaan: Number(s.ketersediaan), rasio: s.rasio === null ? null : Number(s.rasio) })),
     tantanganPerBidang: bidang.rows.map((b) => ({ bidang: b.bidang as Bidang, nama: namaBidang[b.bidang as Bidang], jumlah: Number(b.jumlah) })),
-    funnel: [{ tahap: 'Tantangan terbuka', jumlah: terbuka }, { tahap: 'Punya kandidat ≥60', jumlah: punyaKandidat }, { tahap: 'Punya minat', jumlah: Number(row.punyaMinat) }],
+    funnel: [{ tahap: 'Proyek terbuka', jumlah: terbuka }, { tahap: 'Punya kandidat ≥60', jumlah: punyaKandidat }, { tahap: 'Punya minat', jumlah: Number(row.punyaMinat) }],
   };
 }

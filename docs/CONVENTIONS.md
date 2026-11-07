@@ -1,4 +1,4 @@
-# CONVENTIONS — Jembatan
+# CONVENTIONS — Skillign
 
 Aturan teknis yang berlaku untuk semua kode di repo ini.
 
@@ -6,7 +6,7 @@ Aturan teknis yang berlaku untuk semua kode di repo ini.
 
 ## Konteks
 
-Jembatan adalah prototipe platform matchmaking industri–akademik dengan halaman analitik. Semua data di dalamnya adalah data contoh.
+Skillign adalah prototipe platform matchmaking industri–akademik dengan halaman analitik. Dataset demonstrasi berlabel Data contoh: nama/topik publik dibedakan dari atribut simulasi menurut ADR 001.
 
 Kebutuhan: [`PROJECTBRIEF.md`](PROJECTBRIEF.md) · Rancangan: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) · Urutan kerja: [`docs/ROADMAP.md`](docs/ROADMAP.md) · Tampilan: [`docs/DESIGN.md`](docs/DESIGN.md)
 
