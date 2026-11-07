@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { hitungSkor, rekomendasiTalenta, rekomendasiTantangan, saranBelajar } from './skor';
-import type { KebutuhanSkill, SkillTalenta, Talenta, Tantangan } from './types';
+import { hitungSkor, rekomendasiTalenta, rekomendasiTantangan, saranBelajar } from './skor.js';
+import type { KebutuhanSkill, SkillTalenta, Talenta, Tantangan } from './types.js';
 
 const wajib: KebutuhanSkill[] = [{ skillId: 'react', wajib: true }, { skillId: 'sql', wajib: true }];
 const kebutuhan = [...wajib, { skillId: 'figma', wajib: false }];

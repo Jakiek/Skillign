@@ -1,5 +1,5 @@
 import { readFile } from 'node:fs/promises';
-import type { Database } from './database';
+import type { Database } from './database.js';
 
 const migrasi = ['001_skema.sql', '002_view_analitik.sql', '003_sumber_referensi.sql'] as const;
 

@@ -1,11 +1,11 @@
-import type { Analitik, DetailTalenta, DetailTantangan } from '../src/domain/types';
+import type { Analitik, DetailTalenta, DetailTantangan } from '../src/domain/types.js';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { PGlite } from '@electric-sql/pglite';
 import request from 'supertest';
-import { createApp } from './app';
-import type { Database } from './database';
-import { jalankanMigrasi } from './migrations';
-import { isiDataContoh } from './seed';
+import { createApp } from './app.js';
+import type { Database } from './database.js';
+import { jalankanMigrasi } from './migrations.js';
+import { isiDataContoh } from './seed.js';
 
 const pg = new PGlite();
 const db: Database = {

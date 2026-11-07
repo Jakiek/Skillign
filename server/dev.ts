@@ -1,5 +1,5 @@
-import { createApp } from './app';
-import { getPool } from './db';
+import { createApp } from './app.js';
+import { getPool } from './db.js';
 
 const pool = getPool();
 const server = createApp(pool).listen(3001, '127.0.0.1', () => {

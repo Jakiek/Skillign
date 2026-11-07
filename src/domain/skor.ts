@@ -1,4 +1,4 @@
-import type { HasilSkor, KebutuhanSkill, SkillId, SkillTalenta, Talenta, Tantangan } from './types';
+import type { HasilSkor, KebutuhanSkill, SkillId, SkillTalenta, Talenta, Tantangan } from './types.js';
 
 const bobotLevel = { 1: 0.6, 2: 0.85, 3: 1 } as const;
 const urutTeks = (a: string, b: string) => a.localeCompare(b, 'id');

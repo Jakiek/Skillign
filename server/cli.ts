@@ -1,6 +1,6 @@
-import { getPool } from './db';
-import { jalankanMigrasi } from './migrations';
-import { isiDataContoh } from './seed';
+import { getPool } from './db.js';
+import { jalankanMigrasi } from './migrations.js';
+import { isiDataContoh } from './seed.js';
 
 const pool = getPool();
 try {

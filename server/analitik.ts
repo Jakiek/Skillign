@@ -1,7 +1,7 @@
-import type { Analitik, Bidang } from '../src/domain/types';
-import { rekomendasiTalenta } from '../src/domain/skor';
-import type { Database } from './database';
-import { daftarTalenta, daftarTantangan } from './queries';
+import type { Analitik, Bidang } from '../src/domain/types.js';
+import { rekomendasiTalenta } from '../src/domain/skor.js';
+import type { Database } from './database.js';
+import { daftarTalenta, daftarTantangan } from './queries.js';
 
 export async function bacaAnalitik(db: Database): Promise<Analitik> {
   const [ringkasan, permintaan, kesenjangan, bidang, tantangan, talenta] = await Promise.all([

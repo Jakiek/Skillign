@@ -1,6 +1,6 @@
 import type { Request, Response } from 'express';
-import { createApp } from '../server/app';
-import { getPool } from '../server/db';
+import { createApp } from '../server/app.js';
+import { getPool } from '../server/db.js';
 
 let app: ReturnType<typeof createApp> | undefined;
 

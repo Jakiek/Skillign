@@ -1,5 +1,5 @@
-import type { Database } from './database';
-import type { TantanganBaru, MinatBaru } from '../src/domain/schemas';
+import type { Database } from './database.js';
+import type { TantanganBaru, MinatBaru } from '../src/domain/schemas.js';
 
 export async function buatTantangan(db: Database, data: TantanganBaru) {
   // Satu statement atomik: kegagalan FK skill membatalkan tantangan sekaligus.

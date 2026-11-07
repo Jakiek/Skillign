@@ -1,5 +1,5 @@
-import type { Skill, Talenta, Tantangan } from '../src/domain/types';
-import type { Database } from './database';
+import type { Skill, Talenta, Tantangan } from '../src/domain/types.js';
+import type { Database } from './database.js';
 
 export async function daftarSkill(db: Database) {
   return (await db.query<Skill & Record<string, unknown>>('SELECT id, nama, kategori FROM skill ORDER BY nama, id')).rows;

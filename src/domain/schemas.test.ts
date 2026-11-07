@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { skemaTantanganBaru, skemaMinat } from './schemas';
+import { skemaTantanganBaru, skemaMinat } from './schemas.js';
 const data = { judul: 'Portal data contoh', deskripsi: 'Deskripsi tantangan yang cukup panjang.', organisasiId: 1, bidang: 'web', durasiBulan: 2, skillWajib: ['react'], skillTambahan: [] };
 describe('skema form bersama', () => {
   it('trim isian dan normalisasi slug', () => {

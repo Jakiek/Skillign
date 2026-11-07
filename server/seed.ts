@@ -1,5 +1,5 @@
-import { mitraReferensi, sumberDteti } from '../src/domain/sumber';
-import type { Database } from './database';
+import { mitraReferensi, sumberDteti } from '../src/domain/sumber.js';
+import type { Database } from './database.js';
 
 const katalog = {
   web: ['React', 'Next.js', 'TypeScript', 'JavaScript', 'HTML', 'CSS', 'Node.js', 'Express'],

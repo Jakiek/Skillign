@@ -1,11 +1,11 @@
-import { buatTantangan, ajukanMinat } from './tulis';
-import { bacaAnalitik } from './analitik';
-import { rekomendasiTalenta, rekomendasiTantangan, saranBelajar } from '../src/domain/skor';
-import type { DetailTalenta, DetailTantangan } from '../src/domain/types';
+import { buatTantangan, ajukanMinat } from './tulis.js';
+import { bacaAnalitik } from './analitik.js';
+import { rekomendasiTalenta, rekomendasiTantangan, saranBelajar } from '../src/domain/skor.js';
+import type { DetailTalenta, DetailTantangan } from '../src/domain/types.js';
 import express, { type ErrorRequestHandler } from 'express';
-import type { Database } from './database';
-import { skemaFilterTantangan, skemaId, skemaTantanganBaru, skemaMinat } from '../src/domain/schemas';
-import { daftarSkill, daftarTalenta, daftarTantangan } from './queries';
+import type { Database } from './database.js';
+import { skemaFilterTantangan, skemaId, skemaTantanganBaru, skemaMinat } from '../src/domain/schemas.js';
+import { daftarSkill, daftarTalenta, daftarTantangan } from './queries.js';
 
 export function createApp(db: Database) {
   const app = express();
