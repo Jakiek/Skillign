@@ -4,9 +4,17 @@
 
 Skillign membantu mahasiswa, dosen, dan pengelola program menemukan kecocokan antara kebutuhan proyek dan skill kandidat. Setiap rekomendasi menyertakan alasan yang dapat ditelusuri; dashboard analitik memperlihatkan permintaan, ketersediaan, dan kesenjangan skill.
 
+**Demo publik: [skillign.vercel.app](https://skillign.vercel.app/)**
+
 [Mulai lokal](#menjalankan-lokal) · [Arsitektur](docs/ARCHITECTURE.md) · [Design system](docs/DESIGN.md) · [Pengujian](#pengujian)
 
 > **Prototipe konsep · Data contoh.** Nama delapan mitra dan judul topik terpilih merujuk sumber publik DTETI. Atribut pencocokan, profil kandidat, dan minat merupakan simulasi. Skillign tidak berafiliasi dengan organisasi yang ditampilkan dan bukan layanan pendaftaran magang resmi.
+
+![Beranda Skillign: pencarian proyek, ringkasan program, dan proyek terbaru](docs/screenshots/beranda.png)
+
+| Detail proyek dan kandidat paling sesuai | Insights permintaan dan ketersediaan skill |
+| --- | --- |
+| ![Detail proyek dengan lima kandidat, skor, dan alasan kecocokan](docs/screenshots/detail-proyek.png) | ![Halaman Insights dengan empat grafik analitik](docs/screenshots/insights.png) |
 
 ## Fitur
 
@@ -38,7 +46,7 @@ flowchart LR
 | API & validasi | Express, Zod |
 | Penyimpanan | PostgreSQL, driver pg; Neon untuk target hosting |
 | Pengujian | Vitest, Testing Library, Supertest, PGlite |
-| Target deployment | Vercel: frontend statis dan API Functions |
+| Deployment | Vercel (region Singapura): frontend statis dan API Functions; Neon (Singapura) |
 
 Logika skor berada dalam fungsi domain murni. Skor dihitung saat permintaan diproses dan tidak disimpan. Agregasi analitik berasal dari view SQL; jumlah proyek dengan kandidat berskor ≥60 dihitung di server menggunakan fungsi domain yang sama.
 
@@ -118,9 +126,9 @@ Baseline terakhir: **90 pengujian lolos**, mencakup rumus matching, validasi, mi
 
 ## Status & batasan
 
-Fitur inti tersedia untuk demonstrasi lokal. Autentikasi, kontrol peran, edit/hapus data, dan notifikasi berada di luar cakupan MVP. Data contoh yang ditulis pada demo publik dapat dilihat pengunjung lain.
+Fitur inti tersedia di demo publik dan lokal. Autentikasi, kontrol peran, edit/hapus data, dan notifikasi berada di luar cakupan MVP. Data contoh yang ditulis pada demo publik dapat dilihat pengunjung lain.
 
-Deployment Vercel, koneksi Neon, dan QA visual lintas perangkat belum dinyatakan terverifikasi. Verifikasi koneksi database, routing API, dan tampilan lintas perangkat sebelum membagikan demo kepada employer.
+Deployment terverifikasi pada 8 November 2026: semua endpoint API membalas data dari Neon, refresh langsung pada URL halaman tidak menghasilkan 404, dan tampilan diperiksa pada desktop serta mobile. Fungsi API dijalankan di region Singapura agar dekat dengan database. Halaman Insights tampil lengkap dalam sekitar 0,5 detik pada kunjungan berikutnya dan 1,8 detik pada kunjungan pertama saat fungsi masih dingin.
 
 ## Dokumentasi
 
