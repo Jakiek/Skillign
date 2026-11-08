@@ -8,7 +8,7 @@ Skillign membantu mahasiswa, dosen, dan pengelola program menemukan kecocokan an
 
 [Mulai lokal](#menjalankan-lokal) · [Arsitektur](docs/ARCHITECTURE.md) · [Design system](docs/DESIGN.md) · [Pengujian](#pengujian)
 
-> **Prototipe konsep · Data contoh.** Nama delapan mitra dan judul topik terpilih merujuk sumber publik DTETI. Atribut pencocokan, profil kandidat, dan minat merupakan simulasi. Skillign tidak berafiliasi dengan organisasi yang ditampilkan dan bukan layanan pendaftaran magang resmi.
+> **Prototipe konsep · Data contoh.** Semua organisasi, proyek, kandidat, dan minat adalah data fiktif untuk demonstrasi. Skillign tidak berafiliasi dengan perusahaan atau institusi mana pun dan bukan layanan pendaftaran magang resmi.
 
 ![Beranda Skillign: pencarian proyek, ringkasan program, dan proyek terbaru](docs/screenshots/beranda.png)
 
@@ -24,7 +24,7 @@ Skillign membantu mahasiswa, dosen, dan pengelola program menemukan kecocokan an
 | **Talents** | Profil kandidat, level skill, lima rekomendasi proyek, dan skill yang disarankan untuk dikembangkan. |
 | **Explainable matching** | Lima kandidat teratas per proyek, skor 0–100, skill wajib yang sesuai/belum terpenuhi, serta skill tambahan yang mendukung. |
 | **Insights** | Permintaan skill, kesenjangan permintaan–ketersediaan, distribusi bidang, ringkasan program, dan corong kolaborasi. |
-| **New opportunity** | Form proyek dengan validasi bersama di klien/server dan rekomendasi langsung setelah penyimpanan. |
+| **New opportunity** | Form proyek dengan validasi bersama di klien/server dan rekomendasi langsung setelah penyimpanan. Proyek dari form diberi label **Dibuat pengunjung**. |
 
 Pengajuan minat dibatasi satu kali per kandidat/proyek melalui constraint database. Antarmuka menyediakan tema terang/gelap, tabel alternatif untuk grafik, serta state pemuatan, kosong, dan gagal.
 
@@ -108,9 +108,9 @@ Skill di luar kebutuhan tidak menurunkan skor. Urutan rekomendasi ditentukan ole
 
 ## Data & analitik
 
-Seed tetap menghasilkan **40 skill, 12 organisasi, 30 proyek, 60 profil kandidat, dan 40 minat**. Delapan nama mitra dan delapan judul topik merujuk [daftar mitra DTETI 2027](https://sarjana.jteti.ugm.ac.id/akademik/penjelasan-aktivitas-akademik/daftar-mitra-magang-dteti-2027/); empat kampus dan profil kandidat bersifat fiktif. Dua puluh dua judul proyek lainnya dibuat untuk simulasi.
+Seed tetap menghasilkan **40 skill, 12 organisasi fiktif, 30 proyek, 60 profil kandidat, dan 40 minat**. Sektor dan jenis topik meniru pola program magang industri di Indonesia; semua nama dan atribut adalah simulasi. Nama organisasi berakhiran "Contoh" agar tidak tertukar dengan perusahaan sungguhan. Lihat [keputusan data](docs/decisions/002_organisasi-fiktif.md).
 
-Skill wajib/tambahan, bidang, deskripsi, durasi, status, dan minat tidak mewakili persyaratan resmi mitra. Lokasi organisasi publik belum diverifikasi. Dataset ini merupakan snapshot terpilih, bukan keseluruhan daftar atau sinkronisasi otomatis. [Kebijakan sumber data](docs/decisions/001_referensi-publik-dteti.md).
+Proyek yang dibuat pengunjung lewat form disimpan dengan `dibuat_pengunjung = TRUE` dan ditampilkan dengan label **Dibuat pengunjung**, sehingga dapat dibedakan dari proyek seed.
 
 Analitik memakai enam view: `v_permintaan_skill`, `v_ketersediaan_skill`, `v_kesenjangan_skill`, `v_tantangan_per_bidang`, `v_minat_per_tantangan`, dan `v_ringkasan_program`. Rasio kesenjangan bernilai `NULL` ketika ketersediaan nol. Kelompok “punya kandidat” dan “punya minat” pada corong dihitung mandiri, sehingga tidak menyatakan konversi berurutan.
 
@@ -122,11 +122,11 @@ npm run lint
 npm run build
 ```
 
-Baseline terakhir: **90 pengujian lolos**, mencakup rumus matching, validasi, migrasi/seed, integritas SQL, API, dan interaksi antarmuka. Pengujian tidak memerlukan akun Neon. Cakupan mencakup matching, validasi form, integritas database, sumber data publik, pencarian/filter URL, pengajuan minat, dan tema antarmuka.
+Baseline terakhir: **91 pengujian lolos**, mencakup rumus matching, validasi, migrasi/seed, integritas SQL, API, dan interaksi antarmuka. Pengujian tidak memerlukan akun Neon. Cakupan mencakup matching, validasi form, integritas database, data organisasi fiktif, label proyek buatan pengunjung, pencarian/filter URL, pengajuan minat, dan tema antarmuka.
 
 ## Status & batasan
 
-Fitur inti tersedia di demo publik dan lokal. Autentikasi, kontrol peran, edit/hapus data, dan notifikasi berada di luar cakupan MVP. Data contoh yang ditulis pada demo publik dapat dilihat pengunjung lain.
+Fitur inti tersedia di demo publik dan lokal. Autentikasi, kontrol peran, edit/hapus data, dan notifikasi berada di luar cakupan MVP. Data contoh yang ditulis pada demo publik dapat dilihat pengunjung lain dan diberi label **Dibuat pengunjung**. Saran pengembangan: reset seed terjadwal agar demo publik kembali ke data awal secara berkala.
 
 Deployment terverifikasi pada 8 November 2026: semua endpoint API membalas data dari Neon, refresh langsung pada URL halaman tidak menghasilkan 404, dan tampilan diperiksa pada desktop serta mobile. Fungsi API dijalankan di region Singapura agar dekat dengan database. Halaman Insights tampil lengkap dalam sekitar 0,5 detik pada kunjungan berikutnya dan 1,8 detik pada kunjungan pertama saat fungsi masih dingin.
 

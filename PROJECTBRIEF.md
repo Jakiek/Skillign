@@ -15,7 +15,7 @@ Dokumen ini adalah PRD (product requirements document). Rancangan teknis ada di 
 | **Pemilik** | Naufal Dzaky — Teknologi Informasi UGM |
 | **Tujuan utama** | Portofolio pengembangan aplikasi web dan analitik data |
 | **Target waktu MVP** | 1 hari kerja (lihat ROADMAP) |
-| **Status data** | **Data contoh**. Nama/topik terpilih memakai referensi publik DTETI; atribut pencocokan, talenta, dan minat disimulasikan. |
+| **Status data** | **Data contoh**. Seluruh organisasi, proyek, talenta, dan minat fiktif; sektor dan jenis topik meniru program magang industri. |
 
 ### Kenapa proyek ini ada
 
@@ -24,7 +24,7 @@ Proyek ini menunjukkan dua kemampuan sekaligus:
 1. **Pengembangan aplikasi web** — alur lengkap dari database, API, sampai antarmuka yang di-deploy.
 2. **Analitik data** — halaman analitik yang menghitung permintaan skill, ketersediaan skill, dan kesenjangannya dengan SQL.
 
-> **Catatan kejujuran.** Skillign adalah prototipe konsep buatan sendiri. Tidak berafiliasi dengan perusahaan atau institusi mana pun. Delapan nama mitra dan judul topik terpilih mengacu pada sumber publik DTETI 2027 atas permintaan pemilik. Nama orang dan kampus contoh tetap fiktif; deskripsi, bidang, skill, durasi, status, serta minat merupakan simulasi berlabel "Data contoh". Sumber ditampilkan di UI; ini bukan informasi pendaftaran resmi.
+> **Catatan kejujuran.** Skillign adalah prototipe konsep buatan sendiri. Tidak berafiliasi dengan perusahaan atau institusi mana pun. Semua nama organisasi, proyek, orang, dan kampus fiktif dan berlabel "Data contoh"; deskripsi, bidang, skill, durasi, status, serta minat merupakan simulasi. Proyek yang dibuat pengunjung demo diberi label "Dibuat pengunjung". Ini bukan informasi pendaftaran resmi.
 
 ---
 

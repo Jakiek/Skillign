@@ -253,11 +253,11 @@ Implementasi menambahkan `v_ringkasan_program` di migrasi 002 untuk memastikan t
 
 - Seed acak tetap (mis. `mulberry32(2027)`) agar hasil selalu sama.
 - 40 skill nyata (React, Next.js, TypeScript, SQL, Python, pandas, Power BI, Figma, Arduino, ROS, Docker, dll.).
-- 12 organisasi (8 nama mitra publik DTETI, 4 kampus fiktif), 30 tantangan, 60 talenta, ±40 minat.
+- 12 organisasi fiktif (8 industri, 4 kampus, semua berakhiran "Contoh"), 30 tantangan, 60 talenta, ±40 minat.
 - Distribusi sengaja **tidak seimbang** (mis. permintaan React/SQL tinggi, ketersediaan rendah) supaya grafik kesenjangan bercerita.
 - Semua baris `data_contoh = TRUE`; nama orang fiktif.
 
-Migrasi 003 menambahkan `sumber_url` pada organisasi dan tantangan. Delapan topik terpilih memiliki URL sumber; atribut pencocokan tetap simulasi. Detail keputusan ada di `decisions/001_referensi-publik-dteti.md`. API pencarian mendukung `q` judul/organisasi yang dapat digabung dengan filter; pencarian tidak peka kapital dan memakai parameter SQL.
+Migrasi 003 pernah menambahkan kolom sumber eksternal; migrasi 004 menghapusnya dan menambah `tantangan.dibuat_pengunjung` (default `FALSE`, `TRUE` untuk tantangan dari `POST /api/tantangan`). Seluruh organisasi seed fiktif dan didefinisikan di `src/domain/organisasiContoh.ts`; urutan dan indeksnya menjaga seed tetap deterministik. Detail keputusan ada di `decisions/002_organisasi-fiktif.md`. API pencarian mendukung `q` judul/organisasi yang dapat digabung dengan filter; pencarian tidak peka kapital dan memakai parameter SQL.
 
 ## 9. Konfigurasi & lingkungan
 

@@ -91,7 +91,7 @@ Tiga titik: ●○○ dasar, ●●○ menengah, ●●● mahir. Ada tooltip te
 ## 6. Tata letak halaman
 
 ### Beranda `/`
-Pembuka dua kolom pada layar lebar: judul/pencarian di kiri dan penjelasan kecocokan di kanan. Empat ringkasan berada dalam satu panel terbagi, diikuti tiga tantangan terbaru serta penjelasan sumber publik. Navigasi Lihat tantangan/Buka analitik tetap tersedia.
+Pembuka dua kolom pada layar lebar: judul/pencarian di kiri dan penjelasan kecocokan di kanan. Empat ringkasan berada dalam satu panel terbagi, diikuti tiga tantangan terbaru serta catatan data contoh. Navigasi Lihat tantangan/Buka analitik tetap tersedia.
 
 ### Tantangan `/tantangan`
 Pencarian judul/organisasi tersimpan sebagai `q` di URL. Filter di sisi kiri, hasil di kanan. Kartu dua kolom mulai 1280 px, satu kolom di bawahnya. Pada mobile panel filter dapat dibuka lewat tombol. Query, bidang, dan skill terpilih tampil sebagai chip yang dapat dihapus satu per satu tanpa menghapus filter lainnya.
