@@ -77,10 +77,10 @@ describe('halaman Skillign', () => {
   });
   it('pencarian beranda membuka daftar dengan query yang diketik', async () => {
     mockApi(); const user = userEvent.setup(); mount('/');
-    await user.type(screen.getByRole('searchbox', { name: 'Cari judul atau organisasi' }), 'JALA');
+    await user.type(screen.getByRole('searchbox', { name: 'Cari judul atau organisasi' }), 'Akuatek');
     await user.click(screen.getByRole('button', { name: 'Cari proyek' }));
     await screen.findByRole('heading', { name: 'Opportunities', level: 1 });
-    expect(screen.getByLabelText('URL saat ini').textContent).toBe('/tantangan?q=JALA');
+    expect(screen.getByLabelText('URL saat ini').textContent).toBe('/tantangan?q=Akuatek');
   });
   it('pencarian menyimpan q dalam URL, menjaga filter, dan reset membersihkan isian', async () => {
     mockApi(); const user = userEvent.setup(); mount('/tantangan?bidang=web');

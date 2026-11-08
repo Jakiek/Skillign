@@ -28,10 +28,13 @@ async function snapshot() {
     (await db.query(`SELECT * FROM ${table} ORDER BY 1, 2`)).rows));
 }
 
+// Nama organisasi nyata dari versi awal data contoh; hanya untuk memastikan tidak muncul lagi.
+const NAMA_ORGANISASI_LAMA = ['DTETI', 'jteti', 'JALA Tech', 'Karya Solusi Angkasa', 'Buana Karya', 'Beehive', 'Nusapala', 'Gamatechno', 'Global Data Inspirasi', 'Aino Indonesia'];
+
 describe('fondasi PostgreSQL dan API', () => {
   it('migrasi dapat diulang tanpa menghapus data', async () => {
     await jalankanMigrasi(db);
-    expect((await db.query('SELECT * FROM migrasi')).rows).toHaveLength(3);
+    expect((await db.query('SELECT * FROM migrasi')).rows).toHaveLength(4);
     expect((await db.query('SELECT * FROM tantangan')).rows).toHaveLength(30);
   });
   it('seed dua kali menghasilkan semua baris yang identik', async () => {
@@ -270,23 +273,25 @@ describe('fondasi PostgreSQL dan API', () => {
     expect(body).toHaveLength(12);
     expect(body[0]).toMatchObject({ id: expect.any(Number), nama: expect.any(String), kota: expect.any(String) });
   });
-  it('delapan topik bersumber publik, atribut pencocokan tetap data contoh', async () => {
+  it('seluruh organisasi seed fiktif dan tidak memuat nama organisasi nyata', async () => {
+    const org: { nama: string; kota: string }[] = (await request(app).get('/api/organisasi').expect(200)).body;
+    expect(org).toHaveLength(12);
+    expect(org.every((o) => o.nama.endsWith('Contoh') && o.kota === 'Kota contoh')).toBe(true);
     const data = (await request(app).get('/api/tantangan').expect(200)).body as (DetailTantangan['tantangan'])[];
-    const sourced = data.filter((t) => t.sumberUrl);
-    expect(sourced).toHaveLength(8);
-    expect(sourced.find((t) => t.judul === 'ETL and Data Ingestion')?.organisasi.nama).toBe('PT Global Data Inspirasi');
-    expect(sourced.every((t) => t.sumberUrl === t.organisasi.sumberUrl && t.dataContoh)).toBe(true);
-    expect(data.filter((t) => !t.sumberUrl)).toHaveLength(22);
-    const org = await db.query('SELECT id FROM organisasi WHERE sumber_url IS NOT NULL');
-    expect(org.rows).toHaveLength(8);
+    expect(data).toHaveLength(30);
+    const teks = JSON.stringify({ org, data });
+    for (const nama of NAMA_ORGANISASI_LAMA) expect(teks.toLowerCase()).not.toContain(nama.toLowerCase());
+    expect(teks).not.toMatch(/\bJALA\b/);
+    const kolom = await db.query("SELECT column_name FROM information_schema.columns WHERE column_name = 'sumber_url'");
+    expect(kolom.rows).toHaveLength(0);
   });
   it('pencarian judul dan organisasi tidak peka kapital serta bergabung dengan filter', async () => {
-    const judul = await request(app).get('/api/tantangan?q=etl%20and%20data').expect(200);
+    const judul = await request(app).get('/api/tantangan?q=pipeline%20etl').expect(200);
     expect(judul.body).toHaveLength(1);
-    expect(judul.body[0].judul).toBe('ETL and Data Ingestion');
-    const org = await request(app).get('/api/tantangan?q=GLOBAL%20DATA&bidang=data&skill=python').expect(200);
+    expect(judul.body[0].judul).toBe('Pipeline ETL dan ingest data');
+    const org = await request(app).get('/api/tantangan?q=ANALITIKA%20DATA&bidang=data&skill=python').expect(200);
     expect(org.body.length).toBeGreaterThan(0);
-    for (const row of org.body) { expect(row.organisasi.nama).toBe('PT Global Data Inspirasi'); expect(row.bidang).toBe('data'); }
+    for (const row of org.body) { expect(row.organisasi.nama).toBe('PT Analitika Data Contoh'); expect(row.bidang).toBe('data'); }
   });
   it('pencarian memperlakukan karakter SQL sebagai teks dan membatasi panjang', async () => {
     expect((await request(app).get('/api/tantangan').query({ q: "' OR TRUE --" }).expect(200)).body).toEqual([]);

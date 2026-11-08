@@ -1,4 +1,4 @@
-import { mitraReferensi, sumberDteti } from '../src/domain/sumber.js';
+import { organisasiContoh } from '../src/domain/organisasiContoh.js';
 import type { Database } from './database.js';
 
 const katalog = {
@@ -38,19 +38,19 @@ export async function isiDataContoh(db: Database) {
     for (const [kategori, namaSkill] of Object.entries(katalog)) {
       for (const nama of namaSkill) await db.query('INSERT INTO skill VALUES ($1, $2, $3)', [slug(nama), nama, kategori]);
     }
-    const organisasi = [...mitraReferensi.map((m) => m.nama), 'Institut Cakrawala Contoh', 'Politeknik Reka Contoh', 'Universitas Lentera Contoh', 'Akademi Simpul Contoh'];
+    const organisasi = [...organisasiContoh.map((o) => o.nama), 'Institut Cakrawala Contoh', 'Politeknik Reka Contoh', 'Universitas Lentera Contoh', 'Akademi Simpul Contoh'];
     for (const [i, nama] of organisasi.entries()) {
-      await db.query('INSERT INTO organisasi (nama, jenis, kota, sumber_url) VALUES ($1,$2,$3,$4)', [nama, i < 8 ? 'industri' : 'kampus', i < 8 ? 'Lokasi belum diverifikasi' : 'Kota contoh', i < 8 ? sumberDteti : null]);
+      await db.query('INSERT INTO organisasi (nama, jenis, kota) VALUES ($1,$2,$3)', [nama, i < 8 ? 'industri' : 'kampus', 'Kota contoh']);
     }
 
     for (let i = 0; i < 30; i++) {
       const polaTantangan = pola[i % 5];
-      const referensi = mitraReferensi.find((m) => m.index === i);
-      const organisasiId = referensi ? mitraReferensi.indexOf(referensi) + 1 : 1 + i % 12;
-      const judul = referensi?.topik ?? polaTantangan.judul[Math.floor(i / 5)];
-      await db.query(`INSERT INTO tantangan (organisasi_id, judul, deskripsi, bidang, durasi_bulan, data_contoh, dibuat_pada, sumber_url)
-        VALUES ($1,$2,$3,$4,$5,TRUE,$6,$7)`, [organisasiId, judul,
-        `Data contoh: ${judul}. ${referensi ? 'Judul topik mengacu pada halaman publik DTETI. ' : ''}Deskripsi pekerjaan, bidang, skill wajib/tambahan, durasi, talenta, dan minat merupakan simulasi Skillign, bukan persyaratan atau lowongan resmi organisasi.`, polaTantangan.bidang, 1 + pilih(6), waktu, referensi ? sumberDteti : null]);
+      const contoh = organisasiContoh.find((o) => o.index === i);
+      const organisasiId = contoh ? organisasiContoh.indexOf(contoh) + 1 : 1 + i % 12;
+      const judul = contoh?.topik ?? polaTantangan.judul[Math.floor(i / 5)];
+      await db.query(`INSERT INTO tantangan (organisasi_id, judul, deskripsi, bidang, durasi_bulan, data_contoh, dibuat_pada)
+        VALUES ($1,$2,$3,$4,$5,TRUE,$6)`, [organisasiId, judul,
+        `Data contoh: ${judul}. Organisasi, deskripsi pekerjaan, bidang, skill wajib/tambahan, durasi, talenta, dan minat merupakan simulasi Skillign.`, polaTantangan.bidang, 1 + pilih(6), waktu]);
       for (const [wajib, skill] of [[true, polaTantangan.wajib], [false, polaTantangan.tambahan]] as const) {
         for (const id of skill) await db.query('INSERT INTO tantangan_skill VALUES ($1,$2,$3)', [i + 1, id, wajib]);
       }

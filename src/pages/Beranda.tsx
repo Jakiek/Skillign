@@ -1,4 +1,4 @@
-import { SumberData } from '../components/SumberData';
+import { CatatanDataContoh } from '../components/CatatanDataContoh';
 import { RingkasanProgram } from '../components/RingkasanProgram';
 import { Link, useNavigate } from 'react-router-dom';
 import type { Analitik, Tantangan } from '../domain/types';
@@ -25,6 +25,6 @@ export function Beranda() {
     </section>
     <section className="mb-8" aria-label="Ringkasan data contoh"><Etat {...analitik}>{analitik.data && <RingkasanProgram data={analitik.data.ringkasan} />}</Etat></section>
     <section><div className="mb-5 flex flex-wrap items-baseline justify-between gap-3"><h2 className="text-2xl font-semibold">Proyek terbaru</h2><Link className="text-sm text-brand underline" to="/tantangan">Lihat semua proyek</Link></div><Etat {...tantangan}>{tantangan.data?.length ? <div className="grid gap-4 xl:grid-cols-3">{tantangan.data.slice(0, 3).map((t) => <KartuTantangan key={t.id} item={t} />)}</div> : <Kosong>Belum ada proyek yang tersedia.</Kosong>}</Etat></section>
-    <div className="mt-8"><SumberData /></div>
+    <div className="mt-8"><CatatanDataContoh /></div>
   </>;
 }

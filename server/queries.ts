@@ -9,8 +9,8 @@ export async function daftarSkill(db: Database) {
 export async function daftarTantangan(db: Database, filter: { bidang?: string; skill?: string[]; id?: number; termasukDitutup?: boolean; q?: string } = {}) {
   return (await db.query<Tantangan & Record<string, unknown>>(`
     SELECT t.id, t.judul, t.deskripsi, t.bidang, t.durasi_bulan AS "durasiBulan",
-      t.sumber_url AS "sumberUrl", t.status, t.data_contoh AS "dataContoh", t.dibuat_pada AS "dibuatPada",
-      json_build_object('id', o.id, 'nama', o.nama, 'kota', o.kota, 'jenis', o.jenis, 'sumberUrl', o.sumber_url) AS organisasi,
+      t.status, t.data_contoh AS "dataContoh", t.dibuat_pada AS "dibuatPada",
+      json_build_object('id', o.id, 'nama', o.nama, 'kota', o.kota, 'jenis', o.jenis) AS organisasi,
       COALESCE((SELECT json_agg(json_build_object('skillId', ts.skill_id, 'nama', s.nama, 'wajib', ts.wajib)
         ORDER BY ts.wajib DESC, s.nama, s.id)
         FROM tantangan_skill ts JOIN skill s ON s.id = ts.skill_id WHERE ts.tantangan_id = t.id), '[]'::json) AS skill,

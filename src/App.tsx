@@ -28,7 +28,7 @@ export function App() {
         </Routes>
       </main>
       <footer className="border-t border-line px-6 py-6 text-sm leading-6 text-muted">
-        <p className="mx-auto max-w-7xl">Prototipe portofolio mandiri. Nama mitra dan topik terpilih merujuk sumber publik DTETI; atribut kecocokan, talenta, dan minat merupakan simulasi. Tidak berafiliasi dengan perusahaan atau institusi mana pun.</p>
+        <p className="mx-auto max-w-7xl">Prototipe portofolio mandiri. Seluruh organisasi, proyek, kandidat, dan minat adalah data fiktif. Tidak berafiliasi dengan perusahaan atau institusi mana pun.</p>
       </footer>
     </div>
   );

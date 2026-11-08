@@ -4,10 +4,9 @@ export interface Skill { id: SkillId; nama: string; kategori: string }
 export interface KebutuhanSkill { skillId: SkillId; wajib: boolean }
 export interface SkillTalenta { skillId: SkillId; level: 1 | 2 | 3 }
 export interface Tantangan {
-  sumberUrl?: string | null;
   id: number; judul: string; deskripsi: string; bidang: Bidang;
   durasiBulan: number; status: 'terbuka' | 'ditutup'; dataContoh: boolean;
-  dibuatPada: string; organisasi: { id: number; nama: string; kota: string; jenis: string; sumberUrl?: string | null };
+  dibuatPada: string; organisasi: { id: number; nama: string; kota: string; jenis: string };
   skill: (KebutuhanSkill & { nama: string })[]; jumlahMinat: number;
 }
 export interface Talenta {
