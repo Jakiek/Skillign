@@ -8,10 +8,11 @@ import { App } from '../App';
 import type { Analitik, DetailTalenta, DetailTantangan, Talenta, Tantangan } from '../domain/types';
 
 const skill = [{ id: 'react', nama: 'React', kategori: 'web' }, { id: 'sql', nama: 'SQL', kategori: 'data' }];
-const tantangan: Tantangan = { id: 1, judul: 'Portal pemesanan bahan', deskripsi: 'Bangun prototipe pemesanan menggunakan data sintetis.', bidang: 'web', durasiBulan: 3, status: 'terbuka', dataContoh: true, dibuatPada: '2026-01-01', organisasi: { id: 1, nama: 'Reka Contoh', kota: 'Yogyakarta', jenis: 'industri' }, jumlahMinat: 2, skill: [{ skillId: 'react', nama: 'React', wajib: true }, { skillId: 'sql', nama: 'SQL', wajib: true }] };
+const tantangan: Tantangan = { id: 1, judul: 'Portal pemesanan bahan', deskripsi: 'Bangun prototipe pemesanan menggunakan data sintetis.', bidang: 'web', durasiBulan: 3, status: 'terbuka', dataContoh: true, dibuatPengunjung: false, dibuatPada: '2026-01-01', organisasi: { id: 1, nama: 'Reka Contoh', kota: 'Yogyakarta', jenis: 'industri' }, jumlahMinat: 2, skill: [{ skillId: 'react', nama: 'React', wajib: true }, { skillId: 'sql', nama: 'SQL', wajib: true }] };
 const talenta: Talenta = { id: 1, nama: 'Aruna Contoh', peran: 'mahasiswa', prodi: 'TI', kampus: 'Kampus Contoh', bio: 'Profil fiktif', dataContoh: true, dibuatPada: '2026-01-01', skill: [{ skillId: 'react', nama: 'React', level: 3 }] };
 const hasil = { skor: 40, wajibCocok: ['react'], wajibKurang: ['sql'], tambahanCocok: [] };
 const detailTantangan: DetailTantangan = { tantangan, rekomendasi: [{ talenta, hasil }] };
+const detailPengunjung: DetailTantangan = { tantangan: { ...tantangan, id: 2, judul: 'Proyek kiriman pengunjung', dibuatPengunjung: true }, rekomendasi: [{ talenta, hasil }] };
 const detailTalenta: DetailTalenta = { talenta, rekomendasi: [{ tantangan, hasil }], saranBelajar: ['sql'] };
 const analitik: Analitik = {
   ringkasan: { tantanganTerbuka: 30, jumlahTalenta: 60, jumlahMinat: 40, persenPunyaKandidat: 60 },
@@ -30,6 +31,7 @@ function mockApi() {
     else if (url.pathname === '/api/tantangan') data = url.searchParams.get('skill')?.includes('sql') ? [] : [tantangan];
     else if (url.pathname === '/api/talenta') data = [talenta];
     else if (url.pathname === '/api/tantangan/1') data = detailTantangan;
+    else if (url.pathname === '/api/tantangan/2') data = detailPengunjung;
     else if (url.pathname === '/api/talenta/1') data = detailTalenta;
     else return { ok: false, status: 404 };
     return { ok: true, status: 200, json: async () => data };
@@ -221,6 +223,18 @@ describe('halaman Skillign', () => {
     expect(screen.getByLabelText('Level Mahir')).toBeTruthy();
     await user.click(screen.getByRole('link', { name: 'Portal pemesanan bahan' }));
     await screen.findByRole('heading', { name: 'Portal pemesanan bahan' });
+  });
+  it('proyek buatan pengunjung diberi label, proyek seed tidak', async () => {
+    mockApi();
+    mount('/tantangan/2');
+    expect(await screen.findByRole('heading', { level: 1, name: 'Proyek kiriman pengunjung' })).toBeTruthy();
+    expect(screen.getByText('Dibuat pengunjung')).toBeTruthy();
+    expect(screen.getByText(/dibuat oleh pengunjung demo dan belum ditinjau/)).toBeTruthy();
+    cleanup();
+    mount('/tantangan/1');
+    expect(await screen.findByRole('heading', { level: 1, name: 'Portal pemesanan bahan' })).toBeTruthy();
+    expect(screen.queryByText('Dibuat pengunjung')).toBeNull();
+    expect(screen.queryByText(/dibuat oleh pengunjung demo/)).toBeNull();
   });
   it('kegagalan jaringan dapat dicoba ulang', async () => {
     mockApi(); const impl = vi.mocked(fetch).getMockImplementation()!;

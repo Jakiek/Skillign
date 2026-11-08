@@ -4,8 +4,8 @@ import type { TantanganBaru, MinatBaru } from '../src/domain/schemas.js';
 export async function buatTantangan(db: Database, data: TantanganBaru) {
   // Satu statement atomik: kegagalan FK skill membatalkan tantangan sekaligus.
   const result = await db.query<{ id: number }>(`WITH baru AS (
-    INSERT INTO tantangan (organisasi_id,judul,deskripsi,bidang,durasi_bulan,data_contoh)
-    VALUES ($1,$2,$3,$4,$5,TRUE) RETURNING id
+    INSERT INTO tantangan (organisasi_id,judul,deskripsi,bidang,durasi_bulan,data_contoh,dibuat_pengunjung)
+    VALUES ($1,$2,$3,$4,$5,TRUE,TRUE) RETURNING id
   ), kebutuhan AS (
     INSERT INTO tantangan_skill (tantangan_id,skill_id,wajib)
     SELECT baru.id, s.id, TRUE FROM baru CROSS JOIN unnest($6::text[]) s(id)

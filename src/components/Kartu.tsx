@@ -12,7 +12,7 @@ export function KartuTantangan({ item }: { item: Tantangan }) {
     <h2 className="text-lg font-semibold leading-7"><Link className="hover:text-brand hover:underline" to={`/tantangan/${item.id}`}>{item.judul}</Link></h2>
     <p className="mt-1 text-sm text-muted">{item.organisasi.kota}</p>
     <div className="my-4 flex flex-wrap gap-2">{item.skill.slice(0, 5).map((s) => <SkillChip key={s.skillId} variant={s.wajib ? 'wajib' : 'netral'}>{s.nama}</SkillChip>)}{item.skill.length > 5 && <SkillChip>+{item.skill.length - 5}</SkillChip>}</div>
-    <p className="mt-auto border-t border-line pt-4 text-xs text-muted">{item.jumlahMinat} minat simulasi · Proyek simulasi</p>
+    <p className="mt-auto border-t border-line pt-4 text-xs text-muted">{item.jumlahMinat} minat simulasi · {item.dibuatPengunjung ? 'Dibuat pengunjung' : 'Proyek simulasi'}</p>
   </article>;
 }
 export function KartuTalenta({ item }: { item: Talenta }) {

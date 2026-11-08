@@ -233,6 +233,7 @@ describe('fondasi PostgreSQL dan API', () => {
       const { body } = await request(app).post('/api/tantangan').send({ judul: 'Portal data contoh', deskripsi: 'Bangun portal contoh untuk katalog produk sintetis.', organisasiId: 1, bidang: 'web', durasiBulan: 2, skillWajib: [' React ', 'TypeScript'], skillTambahan: ['git'] }).expect(201);
       const detail: DetailTantangan = (await request(app).get(`/api/tantangan/${body.id}`).expect(200)).body;
       expect(detail.tantangan.dataContoh).toBe(true);
+      expect(detail.tantangan.dibuatPengunjung).toBe(true);
       expect(detail.tantangan.skill.map((s) => s.skillId).sort()).toEqual(['git','react','typescript']);
       expect(detail.rekomendasi).toHaveLength(5);
       expect((await request(app).get('/api/analitik')).body.ringkasan.tantanganTerbuka).toBe(31);
@@ -279,6 +280,7 @@ describe('fondasi PostgreSQL dan API', () => {
     expect(org.every((o) => o.nama.endsWith('Contoh') && o.kota === 'Kota contoh')).toBe(true);
     const data = (await request(app).get('/api/tantangan').expect(200)).body as (DetailTantangan['tantangan'])[];
     expect(data).toHaveLength(30);
+    expect(data.every((t) => t.dibuatPengunjung === false)).toBe(true);
     const teks = JSON.stringify({ org, data });
     for (const nama of NAMA_ORGANISASI_LAMA) expect(teks.toLowerCase()).not.toContain(nama.toLowerCase());
     expect(teks).not.toMatch(/\bJALA\b/);

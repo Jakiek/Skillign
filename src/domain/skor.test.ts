@@ -11,7 +11,7 @@ const talenta = (id: number, nama: string, skill = mahir): Talenta => ({
 });
 const tantangan = (id: number, judul: string): Tantangan => ({
   id, judul, skill: wajib.map((s) => ({ ...s, nama: s.skillId })), deskripsi: 'Data contoh', bidang: 'web',
-  durasiBulan: 2, status: 'terbuka', dataContoh: true, dibuatPada: '2026-01-01T00:00:00Z',
+  durasiBulan: 2, status: 'terbuka', dataContoh: true, dibuatPengunjung: false, dibuatPada: '2026-01-01T00:00:00Z',
   organisasi: { id: 1, nama: 'Organisasi Contoh', kota: 'Yogyakarta', jenis: 'industri' }, jumlahMinat: 0,
 });
 

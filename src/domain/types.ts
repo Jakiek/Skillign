@@ -5,7 +5,7 @@ export interface KebutuhanSkill { skillId: SkillId; wajib: boolean }
 export interface SkillTalenta { skillId: SkillId; level: 1 | 2 | 3 }
 export interface Tantangan {
   id: number; judul: string; deskripsi: string; bidang: Bidang;
-  durasiBulan: number; status: 'terbuka' | 'ditutup'; dataContoh: boolean;
+  durasiBulan: number; status: 'terbuka' | 'ditutup'; dataContoh: boolean; dibuatPengunjung: boolean;
   dibuatPada: string; organisasi: { id: number; nama: string; kota: string; jenis: string };
   skill: (KebutuhanSkill & { nama: string })[]; jumlahMinat: number;
 }
